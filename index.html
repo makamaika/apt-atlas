@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APT ATLAS ｜ 影の図鑑 — 国家支援型サイバー攻撃グループ図鑑</title>
+  <meta name="description" content="国家支援型サイバー攻撃グループ全39組織を編纂したアトラス。中国・イラン・北朝鮮・ロシア・ベトナム・未公表の6つの国家・地域にわたる攻撃グループの帰属、標的、手口、マルウェアの共有関係を、公開情報にもとづき静かに図録化する。">
+
+  <!-- OGP（最小限・外部画像なし） -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="APT ATLAS ｜ 影の図鑑">
+  <meta property="og:description" content="国家支援型サイバー攻撃グループ全39組織の編纂。帰属・標的・手口・マルウェア共有関係の図鑑。">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F5F3EE">
+
+  <!-- CSS 読込順（厳守）: tokens → base → intro → nations → network → explorer -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/nations.css">
+  <link rel="stylesheet" href="css/network.css">
+  <link rel="stylesheet" href="css/explorer.css">
+</head>
+<body>
+
+  <!-- キーボード操作用スキップリンク -->
+  <a class="skip-link" href="#hero">本文へスキップ</a>
+
+  <!-- スクロール進捗バー（上端の朱ヘアライン。main.js が width を更新） -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true">
+    <span class="scroll-progress-bar"></span>
+  </div>
+
+  <!-- =========================================================
+       NAV — 固定ナビ（スクロールで背景ガラスが現れる）
+       ========================================================= -->
+  <header class="nav" id="nav">
+    <nav class="nav-inner" aria-label="サイト内ナビゲーション">
+      <a class="nav-brand" href="#hero" aria-label="APT ATLAS ホームへ">
+        <span class="nav-brand-mark">APT ATLAS</span>
+        <span class="nav-brand-sub">影の図鑑</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="#intro">APTとは</a>
+        <a class="nav-link" href="#nations">国家・地域</a>
+        <a class="nav-link" href="#network">関係ネットワーク</a>
+        <a class="nav-link" href="#explorer">全グループ</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- =========================================================
+         HERO — 明 / Paper。統計ティッカーは data.js から動的表示。
+         ========================================================= -->
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+
+      <!-- 星図モチーフ（気配レベルの地紋。装飾のみ・支援技術からは隠す）。
+           39ノード相当の点＋細い結線を右側〜背後に配置。3〜6%の朱/墨。
+           2〜3点が極めてゆっくり明滅（reduced-motion では静止）。 -->
+      <svg class="hero-star" viewBox="0 0 1000 1000" preserveAspectRatio="xMaxYMid slice"
+           aria-hidden="true" focusable="false">
+        <g class="hero-star-lines">
+          <line x1="395.3" y1="290.8" x2="455.1" y2="259.2"/>
+          <line x1="631.3" y1="777.5" x2="611.3" y2="854.5"/>
+          <line x1="671.8" y1="887.5" x2="611.3" y2="854.5"/>
+          <line x1="688.8" y1="382.7" x2="626.1" y2="467.8"/>
+          <line x1="688.8" y1="382.7" x2="623.9" y2="319.7"/>
+          <line x1="688.8" y1="382.7" x2="796.6" y2="422.6"/>
+          <line x1="813.1" y1="656.8" x2="807.3" y2="669.2"/>
+          <line x1="626.1" y1="467.8" x2="696.7" y2="564.6"/>
+          <line x1="455.1" y1="259.2" x2="438.8" y2="219.6"/>
+          <line x1="740.0" y1="852.6" x2="760.3" y2="827.7"/>
+          <line x1="740.0" y1="852.6" x2="732.3" y2="818.0"/>
+          <line x1="760.3" y1="827.7" x2="732.3" y2="818.0"/>
+          <line x1="860.4" y1="125.8" x2="940.3" y2="188.2"/>
+          <line x1="732.3" y1="818.0" x2="732.1" y2="778.3"/>
+          <line x1="503.3" y1="690.2" x2="421.3" y2="692.9"/>
+          <line x1="814.6" y1="887.1" x2="782.8" y2="926.9"/>
+          <line x1="917.9" y1="399.8" x2="919.1" y2="476.1"/>
+          <line x1="399.3" y1="575.9" x2="470.0" y2="570.3"/>
+          <line x1="399.3" y1="575.9" x2="400.1" y2="436.6"/>
+          <line x1="978.9" y1="106.8" x2="940.3" y2="188.2"/>
+          <line x1="831.6" y1="273.7" x2="899.1" y2="312.5"/>
+          <line x1="470.0" y1="570.3" x2="479.5" y2="587.5"/>
+          <line x1="483.8" y1="149.5" x2="627.3" y2="155.1"/>
+          <line x1="483.8" y1="149.5" x2="420.6" y2="135.0"/>
+          <line x1="483.8" y1="149.5" x2="478.9" y2="185.3"/>
+          <line x1="839.6" y1="687.0" x2="879.1" y2="712.1"/>
+          <line x1="839.6" y1="687.0" x2="807.3" y2="669.2"/>
+          <line x1="915.9" y1="303.0" x2="899.1" y2="312.5"/>
+        </g>
+        <g class="hero-star-nodes">
+          <circle cx="395.3" cy="290.8" r="1.4"/>
+          <circle cx="631.3" cy="777.5" r="1.6"/>
+          <circle cx="671.8" cy="887.5" r="1.8"/>
+          <circle cx="688.8" cy="382.7" r="2.0"/>
+          <circle cx="813.1" cy="656.8" r="1.6"/>
+          <circle cx="626.1" cy="467.8" r="1.8"/>
+          <circle cx="455.1" cy="259.2" r="1.6"/>
+          <circle cx="740.0" cy="852.6" r="1.8"/>
+          <circle cx="611.3" cy="854.5" r="1.4"/>
+          <circle cx="760.3" cy="827.7" r="2.2"/>
+          <circle class="hero-star-pulse" cx="860.4" cy="125.8" r="2.2" style="animation-delay:5.1s"/>
+          <circle cx="732.3" cy="818.0" r="1.4"/>
+          <circle cx="503.3" cy="690.2" r="1.8"/>
+          <circle cx="814.6" cy="887.1" r="1.8"/>
+          <circle cx="623.9" cy="319.7" r="2.0"/>
+          <circle cx="917.9" cy="399.8" r="2.2"/>
+          <circle cx="782.8" cy="926.9" r="1.6"/>
+          <circle cx="399.3" cy="575.9" r="2.6"/>
+          <circle cx="978.9" cy="106.8" r="2.2"/>
+          <circle cx="696.7" cy="564.6" r="1.4"/>
+          <circle cx="831.6" cy="273.7" r="1.8"/>
+          <circle cx="470.0" cy="570.3" r="2.0"/>
+          <circle cx="479.5" cy="587.5" r="1.8"/>
+          <circle cx="483.8" cy="149.5" r="2.0"/>
+          <circle cx="940.3" cy="188.2" r="2.0"/>
+          <circle class="hero-star-pulse" cx="732.1" cy="778.3" r="1.6" style="animation-delay:2.7s"/>
+          <circle cx="839.6" cy="687.0" r="1.8"/>
+          <circle cx="421.3" cy="692.9" r="1.8"/>
+          <circle cx="919.1" cy="476.1" r="2.0"/>
+          <circle cx="915.9" cy="303.0" r="2.2"/>
+          <circle cx="879.1" cy="712.1" r="1.4"/>
+          <circle cx="796.6" cy="422.6" r="1.6"/>
+          <circle cx="400.1" cy="436.6" r="2.2"/>
+          <circle cx="627.3" cy="155.1" r="1.8"/>
+          <circle cx="420.6" cy="135.0" r="2.6"/>
+          <circle cx="899.1" cy="312.5" r="2.0"/>
+          <circle class="hero-star-pulse" cx="478.9" cy="185.3" r="1.8" style="animation-delay:0s"/>
+          <circle cx="807.3" cy="669.2" r="1.8"/>
+          <circle cx="438.8" cy="219.6" r="1.6"/>
+        </g>
+      </svg>
+
+      <div class="hero-inner">
+
+        <div class="hero-lead">
+          <p class="hero-eyebrow" data-reveal>
+            <span class="hero-eyebrow-tab" aria-hidden="true"></span>
+            <span class="label">特別展 ／ <span class="en">Special Exhibition</span></span>
+          </p>
+
+          <div class="hero-title" data-reveal style="--reveal-delay:80ms">
+            <h1 class="display" id="hero-title">影の図鑑</h1>
+          </div>
+
+          <p class="hero-subtitle" data-reveal style="--reveal-delay:140ms">
+            国家支援型サイバー攻撃グループ　全39組織の編纂
+          </p>
+
+          <p class="hero-lede" data-reveal style="--reveal-delay:200ms">
+            国家の意向を背に、国境の外で情報を集め、痕跡を残さず去っていく組織がある。本アトラスは、公開情報として報告されてきた攻撃グループを一枚ずつ図録番号として並べ、その帰属・標的・手口を静かに編み直す試みである。断定ではなく、記録として。
+          </p>
+        </div>
+
+        <!-- 図録番号インデックス（統計3枚）— ビューポート下辺にアンカー。
+             数値は data.js から main.js が注入 -->
+        <div class="hero-index" data-reveal style="--reveal-delay:260ms" aria-label="収録統計">
+          <div class="hero-stat">
+            <span class="hero-stat-metric">
+              <span class="metric" data-stat="groups" data-count-to="39">39</span>
+              <span class="hero-stat-unit">組織</span>
+            </span>
+            <span class="hero-stat-label">収録グループ ／ <span class="en">Groups</span></span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-metric">
+              <span class="metric" data-stat="countries" data-count-to="6">6</span>
+              <span class="hero-stat-unit">国家・地域</span>
+            </span>
+            <span class="hero-stat-label">帰属 ／ <span class="en">Nations</span></span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-metric">
+              <span class="metric" data-stat="topCountry" data-count-to="28">28</span>
+              <span class="hero-stat-unit">中国系（最大勢力）</span>
+            </span>
+            <span class="hero-stat-label">最多帰属 ／ <span class="en">Largest</span></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true">
+        <span class="hero-scroll-line"></span>
+        <span class="hero-scroll-label en">Scroll</span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         セクション・プレースホルダー（各担当が差し込む）
+         ========================================================= -->
+        <section id="intro" class="intro" aria-labelledby="intro-title">
+
+      <!-- ===== 明面 / Paper：解説 ===== -->
+      <div class="intro-paper wrap">
+
+        <header class="intro-head">
+          <p class="intro-eyebrow" data-reveal>
+            <span class="intro-tab" aria-hidden="true"></span>
+            <span class="intro-eyebrow-ja">解説</span>
+            <span class="intro-eyebrow-en">WHAT IS AN APT</span>
+          </p>
+          <p class="intro-plate-no" data-reveal style="--reveal-delay:60ms">NO.&nbsp;02&nbsp;/&nbsp;06</p>
+          <h2 id="intro-title" class="intro-title" data-reveal style="--reveal-delay:90ms">
+            APT とは何か
+          </h2>
+          <p class="intro-lede" data-reveal style="--reveal-delay:140ms">
+            APT ―― Advanced Persistent Threat、すなわち「高度で持続的な脅威」。
+            強固な基盤を持つ国家組織からの指示と支援を受け、数か月、ときには数年にわたって、
+            同じ標的を執拗に狙い続ける攻撃グループを指す。
+          </p>
+        </header>
+
+        <div class="intro-def" data-reveal style="--reveal-delay:60ms">
+          <p class="intro-def-body">
+            一般のサイバー攻撃者と同じく、APT 攻撃グループも情報の窃取・妨害活動・インフラの破壊を試みる。
+            しかし決定的に異なるのは、その<em>持続性</em>にある。目的を達成するまで活動をやめず、
+            セキュリティ対策が講じられても容易に適応し、多くの場合、同じ標的を執拗に狙い続ける。
+          </p>
+          <p class="intro-def-note">
+            システムから APT 関連のマルウェアが見つかったとしても、それだけで標的にされている証拠にはならない。
+            だからこそ、活発なグループの性質を体系的に把握しておく意義がある。
+          </p>
+        </div>
+
+        <!-- 3特徴カード -->
+        <ul class="intro-traits" aria-label="APT の三つの特徴">
+
+          <li class="intro-trait" data-reveal style="--reveal-delay:0ms">
+            <span class="intro-trait-idx" aria-hidden="true">01</span>
+            <h3 class="intro-trait-name">国家支援</h3>
+            <p class="intro-trait-body">
+              背後に国家組織の指示と資金がある。単独犯や金銭目当ての集団と違い、
+              国家の外交・安全保障・経済戦略の延長線上に標的が選ばれる。
+            </p>
+          </li>
+
+          <li class="intro-trait" data-reveal style="--reveal-delay:70ms">
+            <span class="intro-trait-idx" aria-hidden="true">02</span>
+            <h3 class="intro-trait-name">長期持続性</h3>
+            <p class="intro-trait-body">
+              攻撃は一度きりで終わらない。数か月から数年に及ぶ息の長い作戦として展開され、
+              目的を達するまで同じ標的への潜入と観測が繰り返される。
+            </p>
+          </li>
+
+          <li class="intro-trait" data-reveal style="--reveal-delay:140ms">
+            <span class="intro-trait-idx" aria-hidden="true">03</span>
+            <h3 class="intro-trait-name">適応性</h3>
+            <p class="intro-trait-body">
+              防御側の対策に合わせて手口を変える柔軟さを持つ。検知されれば別の経路を探し、
+              正規サービスや窃取した認証情報を悪用して痕跡を薄めながら侵入を続ける。
+            </p>
+          </li>
+
+        </ul>
+
+      </div>
+
+      <!-- ===== 明→暗の境界（シャープな反転） ===== -->
+
+      <!-- ===== 暗面 / Vault：活動目的の分類 ===== -->
+      <div class="intro-vault vault">
+        <div class="wrap">
+
+          <header class="intro-tax-head">
+            <p class="intro-eyebrow intro-eyebrow--vault" data-reveal>
+              <span class="intro-tab" aria-hidden="true"></span>
+              <span class="intro-eyebrow-ja">活動目的の分類</span>
+              <span class="intro-eyebrow-en">PURPOSE TAXONOMY</span>
+            </p>
+            <h3 class="intro-tax-title" data-reveal style="--reveal-delay:60ms">
+              何のために標的を狙うのか
+            </h3>
+            <p class="intro-tax-lede" data-reveal style="--reveal-delay:110ms">
+              本アトラスの全 39 組織を、公開情報から読み取れる主たる活動目的で五つに分類した。
+              一つのグループが複数の目的を併せ持つことも珍しくない。
+            </p>
+          </header>
+
+          <ol class="intro-tax" aria-label="活動目的の五分類">
+
+            <li class="intro-purpose" data-reveal style="--reveal-delay:0ms">
+              <div class="intro-purpose-top">
+                <h4 class="intro-purpose-name">サイバースパイ</h4>
+                <p class="intro-purpose-count">
+                  <span class="intro-purpose-n">29</span>
+                  <span class="intro-purpose-unit">組織</span>
+                </p>
+              </div>
+              <p class="intro-purpose-body">
+                政府の政策決定や外交・軍事戦略に資する機密情報・戦略的インテリジェンスの収集を狙う活動。
+                全 39 組織のうち約 74% が該当し、最も一般的な類型。
+              </p>
+              <p class="intro-purpose-ex">
+                <span class="intro-purpose-ex-label">代表例</span>
+                <span class="intro-purpose-ex-list">APT29 ／ APT28 ／ APT1 ／ APT34</span>
+              </p>
+            </li>
+
+            <li class="intro-purpose" data-reveal style="--reveal-delay:70ms">
+              <div class="intro-purpose-top">
+                <h4 class="intro-purpose-name">知的財産窃取</h4>
+                <p class="intro-purpose-count">
+                  <span class="intro-purpose-n">15</span>
+                  <span class="intro-purpose-unit">組織</span>
+                </p>
+              </div>
+              <p class="intro-purpose-body">
+                特定産業の技術情報・研究データ・設計図面を窃取し、窃取国の産業競争力強化に充てる活動。
+                航空宇宙・防衛・製薬などが典型的な標的で、中国系グループに顕著。
+              </p>
+              <p class="intro-purpose-ex">
+                <span class="intro-purpose-ex-label">代表例</span>
+                <span class="intro-purpose-ex-list">APT1 ／ APT2 ／ APT9 ／ APT27</span>
+              </p>
+            </li>
+
+            <li class="intro-purpose" data-reveal style="--reveal-delay:140ms">
+              <div class="intro-purpose-top">
+                <h4 class="intro-purpose-name">個人・組織監視</h4>
+                <p class="intro-purpose-count">
+                  <span class="intro-purpose-n">5</span>
+                  <span class="intro-purpose-unit">組織</span>
+                </p>
+              </div>
+              <p class="intro-purpose-body">
+                反体制派・ジャーナリスト・政治的に機微な立場の人物や組織の動向を、継続的に追跡・監視する活動。
+                政府への反対勢力や少数民族問題に関わる標的が多い。
+              </p>
+              <p class="intro-purpose-ex">
+                <span class="intro-purpose-ex-label">代表例</span>
+                <span class="intro-purpose-ex-list">APT39 ／ APT22 ／ APT21</span>
+              </p>
+            </li>
+
+            <li class="intro-purpose" data-reveal style="--reveal-delay:210ms">
+              <div class="intro-purpose-top">
+                <h4 class="intro-purpose-name">金銭目的</h4>
+                <p class="intro-purpose-count">
+                  <span class="intro-purpose-n">3</span>
+                  <span class="intro-purpose-unit">組織</span>
+                </p>
+              </div>
+              <p class="intro-purpose-body">
+                金融機関からの資金窃取、仮想通貨の操作、ランサムウェアによる身代金要求など、
+                直接的な金銭的利益を狙う活動。北朝鮮系に顕著で、国家の外貨獲得戦略と関連するとみられる。
+              </p>
+              <p class="intro-purpose-ex">
+                <span class="intro-purpose-ex-label">代表例</span>
+                <span class="intro-purpose-ex-list">APT38 ／ APT45 ／ APT41</span>
+              </p>
+            </li>
+
+            <li class="intro-purpose" data-reveal style="--reveal-delay:280ms">
+              <div class="intro-purpose-top">
+                <h4 class="intro-purpose-name">破壊的攻撃</h4>
+                <p class="intro-purpose-count">
+                  <span class="intro-purpose-n">3</span>
+                  <span class="intro-purpose-unit">組織</span>
+                </p>
+              </div>
+              <p class="intro-purpose-body">
+                データやシステムを意図的に破壊・無効化し、標的組織の運用そのものを妨害する活動。
+                ワイパー型マルウェアや証拠隠滅を伴う攻撃が特徴で、北朝鮮系に集中して見られる。
+              </p>
+              <p class="intro-purpose-ex">
+                <span class="intro-purpose-ex-label">代表例</span>
+                <span class="intro-purpose-ex-list">APT38 ／ APT37 ／ APT45</span>
+              </p>
+            </li>
+
+          </ol>
+
+          <!-- 命名の豆知識 -->
+          <aside class="intro-naming" data-reveal aria-label="APT 番号の命名について">
+            <p class="intro-naming-label">
+              <span class="intro-naming-mark" aria-hidden="true">＃</span>
+              <span>命名の豆知識</span>
+            </p>
+            <p class="intro-naming-body">
+              APT には <span class="intro-naming-num">1</span> から <span class="intro-naming-num">45</span> まで番号が振られているが、
+              連番ではなく欠番がある。これは、確度の高い帰属を確認できたグループへ、
+              確認された順に番号を付与していくためだ。番号は序列や危険度ではなく、
+              いわば図録に収められた標本の登録番号にあたる。
+            </p>
+          </aside>
+
+        </div>
+      </div>
+
+    </section>
+        <section id="nations" class="nat vault" aria-labelledby="nat-title">
+      <div class="wrap nat-wrap">
+
+        <!-- ============ セクション見出し ============ -->
+        <header class="nat-head">
+          <div class="nat-head-meta" data-reveal>
+            <span class="nat-eyebrow label">第 III 室 ／ WING III</span>
+            <span class="nat-plate plate-no">NO. 03 ／ 06</span>
+          </div>
+          <h2 id="nat-title" class="nat-title" data-reveal style="--reveal-delay:70ms">国家・地域分析</h2>
+          <p class="nat-lede" data-reveal style="--reveal-delay:140ms">
+            本アトラスが編む三十九組織は、六つの国家・地域へと帰属が分かれる。ここでは勢力の偏りを一望し、
+            国ごとの傾向を読み解く。数字は誇張のためではなく、地政学の輪郭を静かに描くためにある。
+          </p>
+        </header>
+
+        <!-- ============ 国別グループ数バーチャート ============ -->
+        <div class="nat-chart" data-reveal aria-labelledby="nat-chart-title">
+          <div class="nat-chart-head">
+            <h3 id="nat-chart-title" class="nat-chart-title">国・地域別 グループ数</h3>
+            <p class="nat-chart-sub label">全 <span class="nat-total" data-total>39</span> 組織の帰属内訳</p>
+          </div>
+          <!-- バーは nations.js が stats.byCountry から動的生成 -->
+          <ul class="nat-bars" data-bars role="list"></ul>
+        </div>
+
+        <!-- ============ 国別プロファイルカード ============ -->
+        <div class="nat-profiles-head" data-reveal>
+          <span class="nat-sub-eyebrow label">PROFILES ／ 国別プロファイル</span>
+          <h3 class="nat-profiles-title">六つの旗の下で</h3>
+        </div>
+        <!-- カードは nations.js が insights.regional から動的生成 -->
+        <div class="nat-profiles" data-profiles></div>
+
+        <!-- ============ 地域と標的の関係 考察 ============ -->
+        <div class="nat-nexus" aria-labelledby="nat-nexus-title">
+          <div class="nat-nexus-head" data-reveal>
+            <span class="nat-sub-eyebrow label">CORRELATION ／ 相関</span>
+            <h3 id="nat-nexus-title" class="nat-nexus-title">地域と標的の関係</h3>
+            <p class="nat-nexus-lede">
+              標的の選定は攻撃国の地政学的優先事項と強く相関する。どこを狙うかは、その国家が何を欲するかを映す。
+            </p>
+          </div>
+          <!-- 相関の対応関係は nations.js が生成 -->
+          <ol class="nat-nexus-list" data-nexus role="list"></ol>
+        </div>
+
+      </div>
+    </section>
+        <section id="network" class="net vault" aria-labelledby="net-title">
+      <div class="wrap net-wrap">
+
+        <header class="net-head" data-reveal>
+          <p class="net-eyebrow label">
+            <span class="net-eyebrow-tab" aria-hidden="true"></span>
+            第 IV 室 ／ WING IV — CONSTELLATION
+          </p>
+          <p class="net-plate plate-no">NO. 04 / 06</p>
+          <h2 id="net-title" class="net-title">関係ネットワーク図</h2>
+          <p class="net-lede">
+            APTは孤立していない — マルウェアと帰属で繋がるエコシステム。
+            共有されたバックドア、受け継がれたツール、同じ国家という背景。
+            39組織を線で結ぶと、暗闇に一つの星座が浮かび上がる。
+          </p>
+        </header>
+
+        <div class="net-legend" data-reveal style="--reveal-delay:80ms" role="list" aria-label="国別の凡例">
+          <span class="net-key cc-cn" data-country="CN" role="listitem"><span class="net-dot" aria-hidden="true"></span>中国<span class="net-key-n">28</span></span>
+          <span class="net-key cc-ir" data-country="IR" role="listitem"><span class="net-dot" aria-hidden="true"></span>イラン<span class="net-key-n">4</span></span>
+          <span class="net-key cc-kp" data-country="KP" role="listitem"><span class="net-dot" aria-hidden="true"></span>北朝鮮<span class="net-key-n">3</span></span>
+          <span class="net-key cc-ru" data-country="RU" role="listitem"><span class="net-dot" aria-hidden="true"></span>ロシア<span class="net-key-n">2</span></span>
+          <span class="net-key cc-vn" data-country="VN" role="listitem"><span class="net-dot" aria-hidden="true"></span>ベトナム<span class="net-key-n">1</span></span>
+          <span class="net-key cc-un" data-country="UN" role="listitem"><span class="net-dot" aria-hidden="true"></span>未公表<span class="net-key-n">1</span></span>
+        </div>
+
+        <figure class="net-figure" data-reveal style="--reveal-delay:140ms">
+          <div class="net-stage" id="net-stage">
+            <!-- SVG は network.js が動的生成して挿入する -->
+            <p class="net-fallback">ネットワーク図を描画しています…</p>
+          </div>
+          <figcaption class="net-caption label">
+            ノード＝39組織 ／ 線＝共有マルウェア・帰属・戦術の関係（全29本）。
+            ノードにカーソルを合わせる（タップする）と繋がりが灯り、選ぶと詳細が開く。
+          </figcaption>
+        </figure>
+
+        <div class="net-highlights" aria-label="注目の繋がり">
+          <p class="net-hl-head label" data-reveal>注目の繋がり ／ NOTABLE TIES</p>
+          <div class="net-hl-grid">
+
+            <article class="net-hl cc-cn" data-country="CN" data-focus="APT40" tabindex="0" role="button"
+                     aria-label="APT40 を図の中心として開く" data-reveal style="--reveal-delay:60ms">
+              <span class="net-hl-edge" aria-hidden="true"></span>
+              <p class="net-hl-tag label">共有マルウェア ／ SOGU</p>
+              <h3 class="net-hl-title">中国系9グループが握る共通バックドア</h3>
+              <p class="net-hl-body">
+                バックドア <span class="net-mono">SOGU</span> は
+                APT3・APT9・APT20・APT21・APT22・APT26・APT27・APT31・APT40 の
+                <strong>9グループ</strong>が共有する。これらが一つの中国系クラスタを成し、
+                個々が独立組織というより共通の開発・インフラ資源を分け合うエコシステムであることを示唆する。
+              </p>
+              <p class="net-hl-foot">結節点 <span class="net-mono">APT40</span>（最多10接続）を中心に見る →</p>
+            </article>
+
+            <article class="net-hl cc-kp" data-country="KP" data-focus="APT38" tabindex="0" role="button"
+                     aria-label="APT38 を図の中心として開く" data-reveal style="--reveal-delay:130ms">
+              <span class="net-hl-edge" aria-hidden="true"></span>
+              <p class="net-hl-tag label">帰属 ／ LAZARUS · RGB</p>
+              <h3 class="net-hl-title">APT38 × APT45 — 北朝鮮の金銭部隊</h3>
+              <p class="net-hl-body">
+                <span class="net-mono">APT38</span> と <span class="net-mono">APT45</span> は
+                北朝鮮偵察総局（RGB）／Lazarus とリソースを共有すると評価される。
+                <span class="net-mono">APT37</span> を加えた<strong>3グループ</strong>が
+                スパイと外貨獲得という二重使命を担う一群を形づくる。
+              </p>
+              <p class="net-hl-foot">結節点 <span class="net-mono">APT38</span> を中心に見る →</p>
+            </article>
+
+            <article class="net-hl cc-cn" data-country="CN" data-focus="APT15" tabindex="0" role="button"
+                     aria-label="APT15 を図の中心として開く" data-reveal style="--reveal-delay:200ms">
+              <span class="net-hl-edge" aria-hidden="true"></span>
+              <p class="net-hl-tag label">戦術 ／ SHARED INFRASTRUCTURE</p>
+              <h3 class="net-hl-title">APT15 — 帰属を曖昧にする影の配線</h3>
+              <p class="net-hl-body">
+                <span class="net-mono">APT15</span> は固有のバックドアやインフラを持たず、
+                ENFAL を <span class="net-mono">APT24</span> と、MIRAGE を <span class="net-mono">APT25</span> と共有し、
+                <span class="net-mono">APT40</span>・<span class="net-mono">APT27</span> ともインフラを融通する。
+                <strong>4本</strong>の線が示すのは、資源共有によって攻撃の関与特定を困難にする手口だ。
+              </p>
+              <p class="net-hl-foot">結節点 <span class="net-mono">APT15</span> を中心に見る →</p>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ツールチップ（図に追従。JSが座標を更新）。
+           視覚的補助のみ。各ノードに aria-label（接続件数まで）があり冗長なため、
+           aria-live を外し aria-hidden にしてホバー毎の連続読み上げを防ぐ。 -->
+      <div class="net-tip" id="net-tip" aria-hidden="true" hidden>
+        <p class="net-tip-name"></p>
+        <p class="net-tip-hook"></p>
+        <p class="net-tip-shared"></p>
+      </div>
+    </section>
+        <section id="explorer" class="exp" aria-labelledby="exp-title">
+      <div class="wrap">
+
+        <!-- ── 章見出し ── -->
+        <header class="exp-head" data-reveal>
+          <p class="exp-eyebrow">
+            <span class="exp-eyebrow-tab" aria-hidden="true"></span>
+            <span class="exp-eyebrow-label">第 V 室 ／ WING V</span>
+          </p>
+          <p class="exp-plate-no">NO. 05 / 06</p>
+          <h2 id="exp-title" class="exp-title">全グループ探索</h2>
+          <p class="exp-lede">
+            収録された全 39 組織を、名称・別名・マルウェア名で検索し、国家・地域と活動目的で絞り込める。
+            各標本をひらけば、標的業種・概要・攻撃経路・関連マルウェア、そして類縁のグループまでを閲覧できる。
+          </p>
+        </header>
+
+        <!-- ── 検索・フィルタ ── -->
+        <div class="exp-controls" data-reveal style="--reveal-delay:80ms">
+
+          <div class="exp-search">
+            <svg class="exp-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <line x1="15.5" y1="15.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="search"
+              id="exp-search-input"
+              class="exp-search-input"
+              placeholder="名称・別名・マルウェア名で検索"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="名称・別名・マルウェア名で検索"
+            />
+            <button type="button" class="exp-search-clear" id="exp-search-clear" aria-label="検索をクリア" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="exp-filters">
+            <div class="exp-filter-group" role="group" aria-label="国家・地域で絞り込む">
+              <span class="exp-filter-legend">国家・地域</span>
+              <div class="exp-chips" id="exp-country-chips"><!-- JS生成 --></div>
+            </div>
+            <div class="exp-filter-group" role="group" aria-label="活動目的で絞り込む">
+              <span class="exp-filter-legend">活動目的</span>
+              <div class="exp-chips" id="exp-purpose-chips"><!-- JS生成 --></div>
+            </div>
+          </div>
+
+          <div class="exp-status" aria-live="polite">
+            <span class="exp-count" id="exp-count"><span class="exp-count-n">39</span><span class="exp-count-unit"> 組織を表示中</span></span>
+            <button type="button" class="exp-reset" id="exp-reset" hidden>絞り込みを解除</button>
+          </div>
+        </div>
+
+        <!-- ── カードグリッド ── -->
+        <div class="exp-grid" id="exp-grid" role="list" aria-label="全グループ一覧"><!-- JS生成 --></div>
+
+        <!-- ── 空状態 ── -->
+        <div class="exp-empty" id="exp-empty" hidden>
+          <div class="exp-empty-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" focusable="false">
+              <circle cx="21" cy="21" r="13" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <line x1="30.5" y1="30.5" x2="40" y2="40" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="exp-empty-title">該当する組織は見つかりませんでした</p>
+          <p class="exp-empty-body">検索語や絞り込み条件を変えて、もう一度お試しください。</p>
+          <button type="button" class="exp-empty-reset" id="exp-empty-reset">条件をすべて解除する</button>
+        </div>
+
+      </div>
+
+      <!-- ── 詳細モーダル（探索セクション末尾に単一配置） ── -->
+      <div class="exp-modal-root" id="exp-modal-root" hidden>
+        <div class="exp-overlay" id="exp-overlay" tabindex="-1"></div>
+        <div
+          class="exp-modal"
+          id="exp-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exp-modal-title"
+        >
+          <div class="exp-modal-inner" id="exp-modal-inner"><!-- JS生成 --></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       FOOTER — 暗 / Vault（奥付）。出典と免責を明記。
+       ========================================================= -->
+  <footer class="foot vault" id="foot" role="contentinfo">
+    <div class="foot-inner">
+
+      <div class="foot-top">
+        <div class="foot-brand">
+          <span class="foot-brand-mark">APT ATLAS</span>
+          <p class="foot-brand-sub">影の図鑑 — 国家支援型サイバー攻撃グループ図鑑</p>
+        </div>
+
+        <div class="foot-sources">
+          <p class="foot-sources-head"><span class="en">Sources</span> ／ 出典</p>
+          <p class="foot-source">
+            FireEye「APT攻撃グループ」（2022年5月保存版）
+            <a href="https://web.archive.org/web/20220518103556/https://www.fireeye.jp/current-threats/apt-groups.html" target="_blank" rel="noopener noreferrer">web.archive.org に保存されたアーカイブを開く</a>
+          </p>
+          <p class="foot-source">
+            Google Cloud Threat Intelligence「APT45」記事
+            <a href="https://cloud.google.com/blog/ja/topics/threat-intelligence/apt45-north-korea-digital-military-machine" target="_blank" rel="noopener noreferrer">cloud.google.com の記事を開く</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        <p class="foot-disclaimer">
+          本サイトは教育目的で公開情報をまとめたものです。掲載する帰属・分類は各出典の報告にもとづく評価であり、確定的な事実の断定を意図するものではありません。
+        </p>
+        <p class="foot-meta">APT ATLAS ／ 全<span data-num>39</span>組織</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       スクリプト（末尾読込・順序厳守）
+       data.js → relations.js → main.js → nations.js → network.js → explorer.js
+       ========================================================= -->
+  <script src="data.js"></script>
+  <script src="relations.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/nations.js"></script>
+  <script src="js/network.js"></script>
+  <script src="js/explorer.js"></script>
+
+</body>
+</html>

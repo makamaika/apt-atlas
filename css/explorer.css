@@ -1,0 +1,1195 @@
+/* =============================================================
+   APT ATLAS — 全グループ探索セクション + 詳細モーダル
+   担当プレフィックス: exp-
+   色・サイズは必ず tokens.css の CSS変数を参照する（生HEX禁止）。
+   このセクションは常に明面（Paper）。ただし変数依存で書き、
+   将来の暗面でも壊れないようにする。
+   ============================================================= */
+
+.exp {
+  background: var(--paper);
+  color: var(--ink);
+  padding-block: var(--section-y);
+  /* モーダルオーバーレイの基準にはしない（オーバーレイは fixed） */
+}
+
+/* wrap は共通ユーティリティだが、未定義環境でも成立するよう保険定義 */
+.exp .wrap {
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* =============================================================
+   1. 章見出し
+   ============================================================= */
+.exp-head {
+  max-width: 54ch;
+}
+
+.exp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-4);
+}
+
+.exp-eyebrow-tab {
+  display: inline-block;
+  width: 26px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* 和文を含むラベル。大文字化は英字 .en スパンにのみ委ねる（base.css の規約）。 */
+.exp-eyebrow-label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+  line-height: var(--lh-tight);
+}
+.exp-eyebrow-label .en { text-transform: uppercase; }
+
+.exp-plate-no {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.exp-title {
+  margin: 0 0 var(--sp-5);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  line-height: var(--lh-h1);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.exp-lede {
+  margin: 0;
+  max-width: var(--reading);
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+/* =============================================================
+   2. 検索・フィルタ
+   ============================================================= */
+.exp-controls {
+  margin-top: clamp(40px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+/* ── テキスト検索 ── */
+.exp-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 34em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  transition: border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease);
+}
+
+/* focus 時、ピル下辺に朱の下線が中央から左右へ伸びる（万年筆の一引き）。
+   角丸ピルの底に沿うよう幅を内側に取り、scaleX で伸展させる。 */
+.exp-search::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--dur-quick) var(--ease);
+  pointer-events: none;
+}
+.exp-search:focus-within::after {
+  transform: scaleX(1);
+}
+
+.exp-search:focus-within {
+  border-color: var(--accent);
+  background: var(--elevated-hover);
+}
+
+.exp-search-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin-inline-start: 18px;
+  color: var(--ink-muted);
+}
+
+.exp-search:focus-within .exp-search-icon {
+  color: var(--accent);
+}
+
+.exp-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.4;
+  padding: 14px 14px 14px 12px;
+}
+
+.exp-search-input::placeholder {
+  color: var(--ink-muted);
+  opacity: 0.9;
+}
+
+/* WebKit/Chromium のネイティブ検索クリア「×」を抑止し、カスタムボタンに一本化する
+   （二重のクリアUIを避ける）。 */
+.exp-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+/* 検索クリアボタン */
+.exp-search-clear {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-inline-end: 8px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease);
+}
+.exp-search-clear svg { width: 16px; height: 16px; }
+.exp-search-clear:hover { color: var(--ink); background: var(--accent-soft); }
+
+/* ── フィルタ群 ── */
+.exp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+.exp-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+/* フィルタ凡例は和文（国家・地域／活動目的）。直掛け大文字化は撤去。 */
+.exp-filter-legend {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+
+.exp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ── フィルタチップ（国・目的共通） ── */
+.exp-chip {
+  --chip-edge: var(--edge);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 15px 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-tight);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease),
+              color var(--dur-quick) var(--ease);
+}
+
+.exp-chip:hover {
+  border-color: var(--chip-edge);
+}
+
+/* 目的チップは国色ドットを持たない（朱の下線的アクセントで統一）*/
+.exp-chip-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--chip-edge);
+  flex: none;
+}
+
+.exp-chip-label { color: inherit; }
+
+.exp-chip-n {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* チップ選択時の spring 感（0.97→1）。JS が押下時に .exp-pop を一瞬付与。
+   is-active への直掛けにしないのは、初期表示の既定 active チップまで
+   跳ねてしまうのを避けるため（操作時のみ演出する）。 */
+@keyframes exp-chip-pop {
+  0%   { transform: scale(0.97); }
+  60%  { transform: scale(1.012); }
+  100% { transform: scale(1); }
+}
+.exp-chip.exp-pop {
+  animation: exp-chip-pop var(--dur-quick) var(--ease);
+}
+
+/* 選択中：当該国色の枠＋淡い面。目的チップは朱で強調 */
+.exp-chip.is-active {
+  border-color: var(--chip-edge);
+  background: color-mix(in srgb, var(--chip-edge) 12%, var(--elevated));
+  color: var(--ink);
+}
+.exp-chip.is-active .exp-chip-n { color: var(--ink); }
+
+/* color-mix 非対応環境フォールバック（枠強調のみ） */
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  .exp-chip.is-active {
+    background: var(--elevated-hover);
+    box-shadow: inset 0 0 0 1px var(--chip-edge);
+  }
+}
+
+/* 「すべて」チップは朱で扱う（国色を持たない集合） */
+.exp-chip-all { --chip-edge: var(--accent); }
+.exp-chip-all .exp-chip-dot { background: var(--accent); }
+
+/* 目的チップは朱アクセントの下線的マーカーを持つ */
+.exp-chip-purpose { --chip-edge: var(--accent); }
+.exp-chip-purpose .exp-chip-mark {
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+  opacity: 0.55;
+  transition: opacity var(--dur-quick) var(--ease);
+}
+.exp-chip-purpose.is-active .exp-chip-mark { opacity: 1; }
+
+/* ── 件数表示・リセット ── */
+.exp-status {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--line);
+}
+
+.exp-count {
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+.exp-count-n {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+/* 件数が変わる瞬間、数字だけが小さくフリップ（fade + translateY）。
+   JS が更新時に .exp-flip を一瞬付与する。 */
+@keyframes exp-count-flip {
+  0%   { opacity: 0; transform: translateY(-0.35em); }
+  100% { opacity: 1; transform: none; }
+}
+.exp-count-n.exp-flip {
+  animation: exp-count-flip var(--dur-quick) var(--ease);
+}
+
+.exp-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: var(--fs-body-s);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-quick) var(--ease);
+}
+.exp-reset:hover { border-bottom-color: var(--accent); }
+
+/* =============================================================
+   3. カードグリッド / 標本プレート（.exp-plate）
+   ============================================================= */
+.exp-grid {
+  margin-top: clamp(32px, 5vw, 56px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--grid-gap);
+}
+
+.exp-plate {
+  --edge: var(--c-un);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-plate-rest);
+  transition: transform var(--dur-hover) var(--ease),
+              background-color var(--dur-hover) var(--ease),
+              border-color var(--dur-hover) var(--ease),
+              box-shadow var(--dur-hover) var(--ease);
+}
+
+/* ── 出現スタッガー（初期表示・フィルタ適用時に JS が付与） ──
+   opacity + translateY(12px) を 400ms・var(--ease) で。
+   カードごとに --exp-i（0起点の連番）を持ち、30ms 間隔で立ち上がる。
+   data-reveal/.is-visible の契約とは独立（グリッドは即時表示、
+   個々のプレートの立ち上がりだけをこのアニメで演出する）。 */
+@keyframes exp-plate-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+/* グリッドが初めてビューに入るまで伏せておく保持状態（アニメ前の初期形）。
+   JS が付け、staggerReveal で exp-in に置換される。 */
+.exp-plate.exp-hold {
+  opacity: 0;
+}
+.exp-plate.exp-in {
+  opacity: 0;
+  animation: exp-plate-in var(--dur-plate-in) var(--ease) both;
+  animation-delay: calc(var(--exp-i, 0) * var(--stagger-plate));
+}
+
+/* 上端の朱ヘアライン（左→右へ伸びる見出し朱）。
+   常時は scaleX(0)（左原点）で不可視、hover / focus で 1 へ伸長。
+   figure の右上フラグ（::after）はそのまま角の登録印として残す。 */
+.exp-plate::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-hover) var(--ease);
+  z-index: 1;
+  pointer-events: none;
+}
+.exp-plate:hover::before,
+.exp-plate:has(.exp-plate-inner:focus-visible)::before {
+  transform: scaleX(1);
+}
+
+/* 上端右角の朱の縦フラグ（図録の見出し朱）。
+   位置は固定 px にして流体 card-pad と切り離し、右上の国バッジ
+   （card-pad 分だけ内側）と最低 10px 以上のクリアランスを保つ。
+   狭幅でもバッジと重ならない角の見出しマークとして機能する。 */
+.exp-plate::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 14px;
+  width: 2px;
+  height: 34px;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.exp-plate:hover {
+  transform: translateY(-4px);
+  background: var(--elevated-hover);
+  border-color: color-mix(in srgb, var(--edge) 34%, var(--line));
+  box-shadow: var(--shadow-plate-hover);
+}
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  .exp-plate:hover { border-color: var(--edge); }
+}
+
+/* フォーカスは内側の role=button 要素へ来る。カード全体に朱アウトラインを描く。
+   :has() 非対応環境では :focus-within を保険に用いる（キーボード/クリック両方で
+   出るが、内側 tabindex 要素はクリックでフォーカスされにくいため実害は小さい）。 */
+.exp-plate:focus-within {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+@supports selector(:has(*)) {
+  .exp-plate:focus-within { outline: none; }
+  .exp-plate:has(.exp-plate-inner:focus-visible) {
+    outline: var(--focus-width) solid var(--accent);
+    outline-offset: var(--focus-offset);
+  }
+}
+/* 内側要素自体には二重の枠を出さない */
+.exp-plate-inner:focus { outline: none; }
+.exp-plate-inner:focus-visible { outline: none; }
+
+/* ── プレート上段 ── */
+.exp-plate-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.exp-plate-idx {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exp-plate-tab {
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+  transition: width var(--dur-hover) var(--ease);
+}
+.exp-plate:hover .exp-plate-tab { width: 30px; }
+
+.exp-plate-no {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 国バッジ（インライン .nation 相当） ── */
+.exp-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.exp-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+}
+
+/* ── 名称・別名 ── */
+.exp-plate-id {
+  margin: 0;
+  font-size: var(--fs-h2);
+  /* カード名は H2 スケール → weight 400（300 は fs-h1 以上の大面積に限る） */
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.exp-plate-alias {
+  margin: 6px 0 0;
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.exp-plate-alias .exp-alias-key {
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  margin-inline-end: 6px;
+}
+
+/* ── フック（一文の惹句。和文本文基準 1.9 に統一） ── */
+.exp-plate-hook {
+  margin: var(--sp-4) 0 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+/* ── 本文帯（フィールド積み重ね） ── */
+.exp-plate-body {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.exp-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+/* フィールドラベルは和文主体。大文字化は英字 .en スパンにのみ委ねる
+   （<html lang="ja"> 下では :lang(ja) が全要素に誤爆するため使わない）。 */
+.exp-field-label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.exp-field-label .en { text-transform: uppercase; }
+
+.exp-sectors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* ── チップ（マルウェア／業種） ── */
+.exp-chip-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--paper);
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  line-height: 1.4;
+}
+.exp-chip-tag.is-mal {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.exp-chip-more {
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  align-self: center;
+  letter-spacing: 0.02em;
+}
+
+/* 絞り込みで隠すカード */
+.exp-plate[hidden] { display: none; }
+
+/* =============================================================
+   4. 空状態（図録らしい静けさ。該当なしの壁札）
+   ============================================================= */
+.exp-empty {
+  margin-top: clamp(40px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(56px, 9vw, 104px) var(--gutter);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--elevated);
+  position: relative;
+  overflow: hidden;
+}
+/* 上端中央に朱の短い見出しタブ（図録の壁札らしい印）。 */
+.exp-empty::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  opacity: 0.85;
+}
+/* 該当0件になった瞬間に静かに立ち上がる（過度でない一度きりのフェード）。 */
+@keyframes exp-empty-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.exp-empty:not([hidden]) {
+  animation: exp-empty-in var(--dur-reveal) var(--ease) both;
+}
+
+/* 英字＋和文の小さなアイブロウ（JS が注入）。壁札の格を添える。 */
+.exp-empty-eyebrow {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.exp-empty-eyebrow .en { text-transform: uppercase; }
+
+.exp-empty-mark {
+  color: var(--ink-muted);
+  opacity: 0.42;
+  margin-bottom: var(--sp-5);
+}
+.exp-empty-mark svg { width: 44px; height: 44px; }
+.exp-empty-title {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  color: var(--ink);
+  text-wrap: balance;
+}
+.exp-empty-body {
+  margin: 0 0 var(--sp-6);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  max-width: 40ch;
+}
+.exp-empty-reset {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body-s);
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: border-color var(--dur-quick) var(--ease);
+}
+.exp-empty-reset:hover { border-color: var(--accent); }
+.exp-empty-reset:focus-visible,
+.exp-reset:focus-visible,
+.exp-search-clear:focus-visible,
+.exp-chip:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* =============================================================
+   5. 詳細モーダル
+   ============================================================= */
+.exp-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 5vh, 64px) var(--sp-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.exp-modal-root[hidden] { display: none; }
+
+.exp-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  -webkit-backdrop-filter: blur(var(--overlay-blur));
+  backdrop-filter: blur(var(--overlay-blur));
+  opacity: 0;
+  transition: opacity var(--dur-modal) var(--ease);
+}
+.exp-modal-root.is-open .exp-overlay { opacity: 1; }
+
+.exp-modal {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin-block: auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+  opacity: 0;
+  transform: scale(0.98);
+  transform-origin: center;
+  transition: opacity var(--dur-modal) var(--ease),
+              transform var(--dur-modal) var(--ease);
+}
+.exp-modal-root.is-open .exp-modal {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.exp-modal-inner {
+  padding: clamp(28px, 4vw, 48px);
+}
+
+/* 前後移動時の内容クロスフェード（150ms out → in）。
+   上部バー（前後ナビ・閉じる）は常在させ、差し替わるヘッダ／本文だけを
+   .exp-modal-content でくるみ、そこにだけ out→in を掛ける。
+   JS が旧内容に .exp-cross-out を付け、遷移完了後に差し替えて外す。 */
+.exp-modal-content {
+  transition: opacity var(--dur-cross) var(--ease),
+              transform var(--dur-cross) var(--ease);
+}
+.exp-modal-content.exp-cross-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* ── モーダルヘッダ ── */
+.exp-modal-head {
+  --edge: var(--c-un);
+  position: relative;
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.exp-modal-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+.exp-modal-plateno {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.exp-modal-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 15px 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.exp-modal-id {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-display);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.exp-modal-aliases {
+  margin: var(--sp-4) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+}
+.exp-modal-aliases .exp-alias-key {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.exp-modal-aliases .exp-alias-item {
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  letter-spacing: 0.03em;
+}
+
+.exp-modal-hook {
+  margin: var(--sp-5) 0 0;
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  max-width: var(--reading);
+}
+
+/* ── 上部バー（前後ナビ ＋ 閉じる） ──
+   sticky で内部スクロール時も上端に留まる。左に前後移動、右に閉じる。
+   本文/ヘッダはこのバーの下に自然に流れる。 */
+.exp-modal-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin: -8px -8px var(--sp-2);
+  pointer-events: none; /* 隙間はクリック透過。子ボタンで復帰 */
+}
+.exp-modal-bar > * { pointer-events: auto; }
+
+/* 前後移動ナビ（番号順・端は循環）。左寄せの小さな一対。 */
+.exp-modal-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.exp-modal-navbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--elevated);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease),
+              transform var(--dur-quick) var(--ease);
+}
+.exp-modal-navbtn svg { width: 17px; height: 17px; }
+.exp-modal-navbtn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.exp-modal-navbtn.is-prev:hover { transform: translateX(-2px); }
+.exp-modal-navbtn.is-next:hover { transform: translateX(2px); }
+.exp-modal-navbtn:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* 現在位置インジケータ（フィルタ結果内の連番）。tabular-nums で桁を揃える。 */
+.exp-modal-pos {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-inline: 2px;
+}
+.exp-modal-pos .exp-modal-pos-cur { color: var(--accent); }
+
+/* ── 閉じるボタン ── */
+.exp-modal-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--elevated);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease);
+}
+.exp-modal-close svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-quick) var(--ease);
+}
+.exp-modal-close:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+/* hover で×が 90deg 回る（閉じるの所作を上品に強める）。 */
+.exp-modal-close:hover svg,
+.exp-modal-close:focus-visible svg {
+  transform: rotate(90deg);
+}
+.exp-modal-close:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* ── モーダル本文フィールド ── */
+.exp-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.exp-mfield {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.exp-mfield-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+}
+.exp-mfield-label .en { text-transform: uppercase; }
+.exp-mfield-label::before {
+  content: "";
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+
+.exp-mfield-text {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  max-width: var(--reading);
+}
+
+/* 帰属の留保ラベル */
+.exp-attrib-note {
+  display: inline-block;
+  font-size: var(--fs-body-s);
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  opacity: 0.85;
+  margin-inline-end: 6px;
+}
+
+/* メタ情報（初出・地域・目的）の行 */
+.exp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5) clamp(32px, 6vw, 64px);
+}
+.exp-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.exp-meta-key {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.exp-meta-key .en { text-transform: uppercase; }
+.exp-meta-val {
+  font-size: var(--fs-body);
+  color: var(--ink);
+  line-height: 1.6;
+}
+.exp-meta-val.is-num { font-variant-numeric: tabular-nums; }
+
+/* チップ列（マルウェア・目的・地域） */
+.exp-mchips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.exp-purpose-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  color: var(--ink);
+  font-size: var(--fs-body-s);
+}
+.exp-purpose-tag::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ── 似ているAPT ── */
+.exp-similar {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.exp-similar-list {
+  display: grid;
+  gap: var(--sp-3);
+}
+.exp-simcard {
+  --edge: var(--c-un);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  text-align: start;
+  width: 100%;
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--elevated);
+  color: var(--ink);
+  font-family: var(--font);
+  cursor: pointer;
+  transition: transform var(--dur-hover) var(--ease),
+              background-color var(--dur-hover) var(--ease),
+              border-color var(--dur-hover) var(--ease);
+}
+.exp-simcard::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--edge);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  transition: background-color var(--dur-hover) var(--ease),
+              box-shadow var(--dur-hover) var(--ease);
+}
+/* hover で朱縁が灯る：枠を朱へ、左の signal edge も朱に灯し微光を添える。
+   国色は識別のための静的表示、hover のアクティブ表現は朱1色に統一する。 */
+.exp-simcard:hover {
+  transform: translateY(-2px);
+  background: var(--elevated-hover);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-plate-hover);
+}
+.exp-simcard:hover::before {
+  background: var(--accent);
+  box-shadow: 0 0 10px 0 var(--accent-soft);
+}
+.exp-simcard:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+.exp-simcard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+.exp-simcard-id {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.exp-simcard-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.exp-simcard-reason {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+/* 「詳細へ」は和文ラベル。大文字化しない。 */
+.exp-simcard-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+}
+.exp-simcard-go svg { width: 13px; height: 13px; }
+
+/* =============================================================
+   6. モーション：リビール（main.js/base.css が未整備でも自己完結で動く保険）
+   base.css が [data-reveal] を扱う場合、こちらの定義は同一挙動で衝突しない。
+   ============================================================= */
+.exp [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-reveal) var(--ease),
+              transform var(--dur-reveal) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.exp [data-reveal].is-visible,
+.exp [data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* =============================================================
+   7. レスポンシブ
+   ============================================================= */
+@media (max-width: 768px) {
+  .exp-modal-topline { flex-wrap: wrap; }
+  .exp-meta { gap: var(--sp-5) var(--sp-6); }
+}
+
+@media (max-width: 560px) {
+  .exp-grid { grid-template-columns: 1fr; }
+  .exp-search { max-width: none; }
+  .exp-filters { gap: var(--sp-6); }
+  .exp-modal-inner { padding: clamp(22px, 6vw, 28px); }
+  .exp-modal-id { font-size: clamp(2.25rem, 12vw, 3rem); }
+}
+
+/* =============================================================
+   8. モーション無効化（prefers-reduced-motion）
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .exp *,
+  .exp-modal-root *,
+  .exp-modal-root {
+    animation: none !important;
+    transition: none !important;
+  }
+  .exp [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .exp-modal,
+  .exp-overlay {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* 追加モーションの初期状態を即時最終形へ（アニメ停止で opacity:0 に
+     取り残されないよう明示的に確定する）。 */
+  .exp-plate.exp-in,
+  .exp-plate.exp-hold {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .exp-modal-content,
+  .exp-modal-content.exp-cross-out {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* hover の朱ヘアライン・検索下線は縮んだ最終状態のまま（動かさない）。 */
+  .exp-plate::before,
+  .exp-search::after {
+    transition: none !important;
+  }
+}

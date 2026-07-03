@@ -1,0 +1,513 @@
+/* =============================================================
+   APT ATLAS — 関係ネットワーク図セクション
+   プレフィックス: net-
+   地: Vault（最暗部）。色/サイズは必ず tokens.css の変数を参照する。
+   「暗闇に星座が浮かぶ」— 抑制されたパレット内で最も静謐に、
+   だが確かに国色が「灯る」よう視認性を担保する。
+   ============================================================= */
+
+.net {
+  padding-block: var(--section-y);
+  position: relative;
+  overflow: hidden;
+}
+
+.net-wrap {
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- 見出し ---------- */
+.net-head {
+  max-width: 52ch;
+}
+
+.net-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  color: var(--ink-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  margin: 0 0 var(--sp-4);
+}
+.net-eyebrow-tab {
+  display: inline-block;
+  width: 26px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.net-plate {
+  color: var(--accent);
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 var(--sp-3);
+}
+
+.net-title {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  line-height: var(--lh-h1);
+  text-wrap: balance;
+  margin: 0 0 var(--sp-5);
+  color: var(--ink);
+}
+
+.net-lede {
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  max-width: var(--reading);
+  margin: 0;
+}
+
+/* ---------- 凡例（クラスタ・ハイライトのトリガも兼ねる） ---------- */
+.net-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-block: var(--sp-7) var(--sp-5);
+}
+.net-key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition:
+    border-color var(--dur-quick) var(--ease),
+    background-color var(--dur-quick) var(--ease);
+}
+.net-key:hover { border-color: var(--edge); }
+.net-key:focus-visible {
+  border-color: var(--edge);
+  outline: var(--focus-width) solid var(--accent-ring);
+  outline-offset: var(--focus-offset);
+}
+/* ピン留め（クリック固定）中：国色の枠で「選択中」を明示 */
+.net-key.is-pinned {
+  border-color: var(--edge);
+  background: var(--elevated-hover);
+}
+.net-key.is-pinned .net-dot {
+  box-shadow: 0 0 11px 0 var(--edge);
+}
+.net-key-n {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.net-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--edge);
+  box-shadow: 0 0 8px -1px var(--edge);
+  flex: none;
+  transition: box-shadow var(--dur-quick) var(--ease);
+}
+
+/* ---------- 図の器 ---------- */
+.net-figure {
+  margin: 0 0 var(--sp-8);
+}
+.net-stage {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(120% 82% at 50% 40%, var(--texture-lift), transparent 64%),
+    var(--vault);
+  overflow: hidden;
+}
+.net-fallback {
+  padding: var(--sp-8) var(--gutter);
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+}
+
+.net-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+}
+
+/* =============================================================
+   クラスタ・ハロー（極薄い楕円。国色 2〜4%）
+   星群がどの国かを図中で示す「壁札」の下地。
+   ============================================================= */
+.net-halo {
+  fill: var(--edge);
+  opacity: 0.035;
+  stroke: var(--edge);
+  stroke-width: 0.5;
+  stroke-opacity: 0.08;
+  transition: opacity var(--dur-quick) var(--ease);
+}
+/* クラスタ強調時、当該国ハローを僅かに持ち上げる */
+.net-halo.is-lit { opacity: 0.09; }
+
+/* =============================================================
+   図中キャプション（「中国 28 · China」色ドット付き）
+   星座図の品位を保つ小さな英字混じりラベル。
+   ============================================================= */
+.net-caption-dot {
+  fill: var(--edge);
+}
+.net-caption-text {
+  fill: var(--ink-muted);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-anchor: start;
+  paint-order: stroke;
+  stroke: var(--vault);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  transition: fill var(--dur-quick) var(--ease);
+}
+.net-caption-en {
+  fill: var(--ink-muted);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+/* クラスタ強調時、当該キャプションを白墨へ持ち上げる */
+.net-caption-tag.is-lit .net-caption-text { fill: var(--ink); }
+.net-caption-tag.is-lit .net-caption-en { opacity: 0.85; }
+
+/* =============================================================
+   エッジ（配線）
+   ============================================================= */
+.net-edge {
+  fill: none;
+  stroke: var(--ink-muted);
+  stroke-width: 0.7;
+  opacity: 0;                     /* 初期非表示 → 配線アニメで出現 */
+  stroke-linecap: round;
+  transition:
+    opacity var(--dur-quick) var(--ease),
+    stroke var(--dur-quick) var(--ease),
+    stroke-width var(--dur-quick) var(--ease);
+}
+/* 配線演出後の定常状態。実機で確かに見えるよう 0.2 を基準に。 */
+.net-edge.is-wired { opacity: 0.2; }
+
+/* 帰属エッジ = 点線（マルウェア共有の実線と区別）。僅かに朱寄り。 */
+.net-edge[data-etype="attribution"] {
+  stroke-dasharray: 2.5 3.5;
+}
+.net-edge[data-etype="attribution"].is-wired {
+  stroke: var(--accent);
+  opacity: 0.22;
+}
+/* 戦術エッジも朱寄りで識別（実線のまま） */
+.net-edge[data-etype="tactic"].is-wired {
+  stroke: var(--accent);
+  opacity: 0.2;
+}
+
+/* =============================================================
+   ノード
+   ============================================================= */
+.net-node {
+  cursor: pointer;
+  outline: none;
+}
+.net-node-halo {
+  fill: var(--edge);
+  opacity: 0;                     /* ホバー/フォーカスで灯る星の光背 */
+  transition: opacity var(--dur-quick) var(--ease);
+}
+.net-node-dot {
+  fill: var(--edge);
+  stroke: var(--vault);
+  stroke-width: 1.1;
+  /* 常時の微発光（filter=url(#net-glow) が国色でにじませる）。
+     CSS 側では明度のみ制御。 */
+  transition:
+    r var(--dur-quick) var(--ease),
+    fill var(--dur-quick) var(--ease),
+    opacity var(--dur-quick) var(--ease);
+}
+.net-node-ring {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease), r var(--dur-quick) var(--ease);
+}
+.net-node-label {
+  fill: var(--ink-muted);
+  font-family: var(--font);
+  font-size: 10.5px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  text-anchor: middle;
+  opacity: 0;                     /* 既定は非表示。ハブ/ホバー時のみ表示 */
+  pointer-events: none;
+  transition: opacity var(--dur-quick) var(--ease), fill var(--dur-quick) var(--ease);
+  paint-order: stroke;
+  stroke: var(--vault);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+/* 度数の高いハブ（度数3以上）は常時ラベル表示（星座の主星） */
+.net-node.is-hub .net-node-label { opacity: 0.92; fill: var(--ink); }
+
+/* ---- フォーカスモード：非関連を減光、関連を灯す ---- */
+.net-svg.is-focusing .net-edge.is-wired { opacity: 0.08; }
+.net-svg.is-focusing .net-node-dot { opacity: 0.24; }
+.net-svg.is-focusing .net-node-label { opacity: 0; }
+.net-svg.is-focusing .net-halo { opacity: 0.02; }
+.net-svg.is-focusing .net-caption-text,
+.net-svg.is-focusing .net-caption-en { opacity: 0.35; }
+
+/* 強調中のエッジ（本人の接続線）— 朱で灯す */
+.net-edge.is-active {
+  opacity: 0.9 !important;
+  stroke: var(--accent) !important;
+  stroke-width: 1.5 !important;
+}
+/* 強調中のノード（本人＋隣接） */
+.net-node.is-active .net-node-dot { opacity: 1 !important; }
+.net-node.is-active .net-node-halo { opacity: 0.5; }
+.net-node.is-active .net-node-ring { opacity: 0.9; }
+.net-node.is-active .net-node-label { opacity: 1 !important; fill: var(--ink); }
+.net-node.is-primary .net-node-halo { opacity: 0.72; }
+.net-node.is-primary .net-node-label { fill: var(--ink); }
+
+/* ---- クラスタモード（凡例hover/click・カード連動）---- */
+/* 当該国の星群を灯し、他を減光 */
+.net-svg.is-clustering .net-edge.is-wired { opacity: 0.09; }
+.net-node.is-dim .net-node-dot { opacity: 0.18; }
+.net-node.is-dim .net-node-label { opacity: 0; }
+.net-node.is-dim .net-node-halo { opacity: 0; }
+.net-edge.is-dim { opacity: 0.06 !important; }
+/* 選ばれた国の星（クラスタ内） */
+.net-node.is-clan .net-node-dot { opacity: 1; }
+.net-node.is-clan .net-node-halo { opacity: 0.42; }
+.net-node.is-clan .net-node-label { opacity: 0.95; fill: var(--ink); }
+
+/* ---- キーボードフォーカス可視化 ---- */
+.net-node:focus-visible .net-node-ring {
+  opacity: 1;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.net-node:focus-visible .net-node-label { opacity: 1; fill: var(--ink); }
+
+/* ---------- 図キャプション（figure外・テキスト） ---------- */
+.net-caption {
+  display: block;
+  margin-top: var(--sp-4);
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+  text-transform: none;
+  font-weight: var(--fw-body);
+  max-width: 60ch;
+}
+
+/* ---------- ツールチップ ---------- */
+.net-tip {
+  position: fixed;
+  z-index: 40;
+  max-width: 260px;
+  padding: 12px 14px;
+  background: var(--elevated-hover);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--edge);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-modal);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-quick) var(--ease), transform var(--dur-quick) var(--ease);
+}
+.net-tip.is-open { opacity: 1; transform: translateY(0); }
+.net-tip-name {
+  margin: 0 0 2px;
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.net-tip-hook {
+  margin: 0 0 6px;
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+.net-tip-hook:empty { display: none; }
+.net-tip-shared {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--accent);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+.net-tip-shared:empty { display: none; }
+
+/* ---------- 注目の繋がり ---------- */
+.net-highlights { margin-top: 0; }
+.net-hl-head {
+  color: var(--ink-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  margin: 0 0 var(--sp-5);
+}
+.net-hl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--grid-gap);
+}
+.net-hl {
+  position: relative;
+  padding: var(--card-pad);
+  padding-left: calc(var(--card-pad) + 4px);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform var(--dur-hover) var(--ease),
+    background-color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+/* 暗面 signal edge: 左端 2px の国色発光縁 */
+.net-hl-edge {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--edge);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  box-shadow: 0 0 10px 0 var(--edge);
+  opacity: 0.85;
+  transition: opacity var(--dur-hover) var(--ease);
+}
+.net-hl:hover,
+.net-hl:focus-visible {
+  transform: translateY(-4px);
+  background: var(--elevated-hover);
+  border-color: var(--edge);
+}
+.net-hl:hover .net-hl-edge,
+.net-hl:focus-visible .net-hl-edge { opacity: 1; }
+.net-hl:focus-visible {
+  outline: var(--focus-width) solid var(--accent-ring);
+  outline-offset: var(--focus-offset);
+}
+.net-hl-tag {
+  color: var(--accent);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  margin: 0 0 var(--sp-3);
+}
+.net-hl-title {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+  margin: 0 0 var(--sp-3);
+  text-wrap: balance;
+}
+.net-hl-body {
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  margin: 0 0 var(--sp-4);
+}
+.net-hl-body strong {
+  color: var(--ink);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.net-hl-foot {
+  font-size: var(--fs-body-s);
+  color: var(--accent);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.net-mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.net-hl-body .net-mono { color: inherit; }
+
+/* =============================================================
+   レスポンシブ
+   ============================================================= */
+/* デスクトップ〜タブレット：横長の器に余裕を持たせる */
+@media (min-width: 768px) {
+  .net-stage { min-height: 460px; }
+}
+
+/* モバイル（768px未満）：縦長ポートレート。
+   JS が viewBox を 620×880 に組み替える。器は 70svh を確保して
+   実質観賞不能だった縦300px問題を解消する。
+   SVG は器を縦いっぱいに満たすよう絶対配置で高さ100%にし、
+   preserveAspectRatio(meet) で中央に収める（レターボックス最小化）。 */
+@media (max-width: 767.98px) {
+  .net-stage {
+    /* svh 非対応環境のフォールバックを先に、対応環境で上書き。
+       縦長 viewBox（幅560×高1000, 高/幅=1.79）が width 基準で描画されると
+       おおむね器の高さを満たすため、height:auto のまま 70svh を確保する。 */
+    min-height: 70vh;
+    min-height: 70svh;
+  }
+  .net-node-label { font-size: 12px; }   /* 縦長 viewBox は基準560幅→拡大されるので実寸維持 */
+  .net-caption-text { font-size: 13px; }
+  .net-caption-en { font-size: 10px; }
+  .net-caption { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .net-legend { gap: var(--sp-2); }
+  .net-key { padding: 6px 12px 6px 10px; font-size: 0.875rem; }
+  .net-hl-grid { grid-template-columns: 1fr; }
+}
+
+/* =============================================================
+   モーション無効化（prefers-reduced-motion）
+   追加モーションを止め、最終状態を即時表示する。
+   発光（filter）や国色は「状態」であってモーションではないため維持。
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .net-edge,
+  .net-node-dot, .net-node-halo, .net-node-ring, .net-node-label,
+  .net-halo, .net-caption-text,
+  .net-tip, .net-hl, .net-hl-edge, .net-key, .net-dot {
+    transition: none;
+  }
+  .net-edge.is-wired { opacity: 0.2; }
+  .net-edge[data-etype="attribution"].is-wired,
+  .net-edge[data-etype="tactic"].is-wired { opacity: 0.22; }
+  .net-hl:hover, .net-hl:focus-visible { transform: none; }
+}

@@ -1,0 +1,430 @@
+/* =============================================================
+   APT ATLAS — intro セクション（「APTとは」解説）
+   担当プレフィックス: intro-
+   §3 章割り: 第2セクション = 明→暗（上半分 Paper・下半分 Vault）。
+   色・サイズは必ず tokens.css の変数を参照する（生HEX禁止）。
+   スクロール出現は data-reveal + main.js/base.css が担うため、
+   ここでは初期非表示/遷移を定義しない（最終見た目のみ規定）。
+   ============================================================= */
+
+/* セクション自体は地の反転を内部の2ブロックで刻むため、
+   ルートには背景を敷かず、余白のみ管理する。 */
+.intro {
+  position: relative;
+}
+
+/* ---------- 明面 / Paper ブロック ---------- */
+.intro-paper {
+  background: var(--paper);
+  padding-block: var(--section-y);
+}
+
+/* ---------- 章ヘッダ ---------- */
+.intro-head {
+  max-width: 52ch;
+}
+
+/* アイブロウ（章ラベル）: 朱タブ + 和文 + 英字 */
+.intro-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-5);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  line-height: var(--lh-tight);
+  color: var(--accent);
+}
+.intro-tab {
+  display: inline-block;
+  inline-size: 26px;
+  block-size: 2px;
+  background: var(--accent);
+  flex: none;
+}
+.intro-eyebrow-ja {
+  letter-spacing: 0.08em;
+}
+.intro-eyebrow-en {
+  color: var(--ink-muted);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+}
+
+/* 図録番号 */
+.intro-plate-no {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  line-height: var(--lh-tight);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 章題 */
+.intro-title {
+  margin: 0;
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  line-height: var(--lh-h1);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* リード（導入） */
+.intro-lede {
+  max-width: var(--reading);
+  margin: var(--stack-m) 0 0;
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 定義本文 ---------- */
+.intro-def {
+  max-width: var(--reading);
+  margin-block-start: var(--stack-l);
+}
+.intro-def-body,
+.intro-def-note {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+.intro-def-body em {
+  font-style: normal;
+  font-weight: var(--fw-semibold);
+  /* 朱を面ではなく、負の余白のない細い下線で控えめに灯す */
+  padding-block-end: 1px;
+  border-block-end: 2px solid var(--accent);
+}
+.intro-def-note {
+  margin-block-start: var(--stack-m);
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+}
+
+/* ---------- 3特徴カード ---------- */
+.intro-traits {
+  list-style: none;
+  margin: var(--section-y) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+}
+.intro-trait {
+  position: relative;
+  padding: var(--card-pad);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  /* 上端に朱の細い見出し帯（標本プレートの意匠と呼応） */
+  overflow: hidden;
+  /* ホバーで僅かに浮く（面明度上昇・SPEC §7.5「translateY(-4px)＋面明度」）。
+     跳ね・スケール・影は使わず、階調と2pxの浮きに留める。 */
+  transition:
+    transform var(--dur-hover) var(--ease),
+    background-color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+.intro-trait::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 34px;
+  block-size: 2px;
+  background: var(--accent);
+  /* ホバーで見出し帯が僅かに伸びる（プレートの朱タブ伸長と呼応） */
+  transition: inline-size var(--dur-hover) var(--ease);
+}
+.intro-trait:hover {
+  transform: translateY(-4px);
+  background: var(--elevated-hover);
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+}
+.intro-trait:hover::before {
+  inline-size: 44px;
+}
+.intro-trait-idx {
+  display: block;
+  margin-block-end: var(--sp-4);
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  line-height: var(--lh-tight);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  /* ホバーで番号が朱に灯る */
+  transition: color var(--dur-hover) var(--ease);
+}
+.intro-trait:hover .intro-trait-idx {
+  color: var(--accent);
+}
+.intro-trait-name {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+}
+.intro-trait-body {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+/* =============================================================
+   明→暗の反転（シャープ。境界ににじみを置かない）
+   ============================================================= */
+.intro-vault {
+  background: var(--vault);   /* .vault が同値を敷くが、境界を確実にシャープに保つ */
+  padding-block: var(--section-y);
+}
+
+/* ---------- 分類ヘッダ ---------- */
+.intro-tax-head {
+  max-width: 52ch;
+}
+.intro-eyebrow--vault {
+  /* 暗面では章ラベルの和文も朱ではなく副次色に落とし、朱は最小限に */
+  color: var(--ink-muted);
+}
+.intro-eyebrow--vault .intro-eyebrow-ja {
+  color: var(--ink-muted);
+}
+.intro-tax-title {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+  text-wrap: balance;
+}
+.intro-tax-lede {
+  max-width: var(--reading);
+  margin: var(--stack-m) 0 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 目的タクソノミー（カード列） ---------- */
+.intro-tax {
+  list-style: none;
+  counter-reset: none;
+  margin: var(--stack-l) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--grid-gap);
+}
+.intro-purpose {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--card-pad);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition:
+    background-color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+/* 左端の朱 signal edge（暗面のみ灯す。SPEC §7.9）。既定は消灯、ホバーで点灯。 */
+.intro-purpose::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 8px 0 var(--accent);
+  opacity: 0;
+  transition: opacity var(--dur-hover) var(--ease);
+}
+.intro-purpose:hover {
+  background: var(--elevated-hover);
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--line));
+}
+.intro-purpose:hover::before {
+  opacity: 0.7;
+}
+.intro-purpose-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block-end: var(--sp-4);
+  margin-block-end: var(--sp-4);
+  border-block-end: 1px solid var(--line);
+}
+.intro-purpose-name {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+}
+.intro-purpose-count {
+  margin: 0;
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  white-space: nowrap;
+}
+.intro-purpose-n {
+  font-size: var(--fs-metric);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-display);
+  line-height: var(--lh-tight);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+/* 数の大小に応じた面積の階調（29/15 は主、5/3/3 は従）。
+   派手にせず、上位2枚を基準・以降を僅かに落として序列を視覚化する。
+   桁揃え（tabular-nums）は全カード共通で維持する。 */
+.intro-purpose:nth-child(n + 3) .intro-purpose-n {
+  font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+  color: var(--ink-muted);
+}
+/* 朱の下線は首位（サイバースパイ29）の1枚のみに限定する。
+   他カードは桁揃えと面積（--fs-metric）で十分に立つ（SPEC §7.4/§8）。 */
+.intro-purpose:first-child .intro-purpose-n {
+  padding-block-end: 4px;
+  border-block-end: 2px solid var(--accent);
+}
+.intro-purpose-unit {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.intro-purpose-body {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.intro-purpose-ex {
+  margin: var(--sp-4) 0 0;
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-3);
+  margin-block-start: auto;   /* カード高さが揃うよう代表例を下端へ */
+}
+/* 「代表例」は和文ラベル。直掛け大文字化は撤去。 */
+.intro-purpose-ex-label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+  opacity: 0.85;
+}
+.intro-purpose-ex-list {
+  font-size: var(--fs-body-s);
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-hover) var(--ease);
+}
+/* カードホバー時、代表例の朱を僅かに深色へ寄せて呼応させる（面ではなく色相の締まり）。 */
+.intro-purpose:hover .intro-purpose-ex-list {
+  color: var(--accent-deep);
+}
+
+/* ---------- 命名の豆知識（注記） ---------- */
+.intro-naming {
+  max-width: var(--reading);
+  margin-block-start: var(--stack-l);
+  padding-inline-start: var(--sp-5);
+  border-inline-start: 2px solid var(--accent);
+}
+.intro-naming-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+.intro-naming-mark {
+  color: var(--accent);
+  font-weight: var(--fw-semibold);
+}
+.intro-naming-body {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+.intro-naming-num {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =============================================================
+   レスポンシブ（768px 主BP / 補助 560px）
+   ============================================================= */
+
+/* ~768px: 特徴カードを縦積み or 1列、見出し系を下限へ */
+@media (max-width: 768px) {
+  .intro-traits {
+    grid-template-columns: 1fr;
+  }
+  .intro-head,
+  .intro-tax-head,
+  .intro-def,
+  .intro-naming {
+    max-width: none;   /* 狭幅では読み幅上限を外し、ガター内で自然に折る */
+  }
+}
+
+/* ~560px: 目的カード上段の数字と名称が詰まりすぎないよう調整 */
+@media (max-width: 560px) {
+  .intro-purpose-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-2);
+  }
+  .intro-tax {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================
+   モーション無効化（prefers-reduced-motion）
+   base.css が reveal 全般を担うが、本セクション固有の
+   装飾トランジションも念のため即時化する。
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .intro *,
+  .intro *::before,
+  .intro *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  /* ホバーの浮き（translateY）は無効化し、面/色の変化のみ残す。 */
+  .intro-trait:hover {
+    transform: none !important;
+  }
+}

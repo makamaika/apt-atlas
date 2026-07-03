@@ -1,0 +1,612 @@
+/* =============================================================
+   APT ATLAS — 国家・地域分析セクション（担当プレフィックス: nat-）
+   地: 暗 / Vault（.vault は section 側に付与済み、トークンは上書き済み）
+   色・サイズは必ず tokens.css の変数を参照する。生HEX禁止。
+   ============================================================= */
+
+/* ---------- セクション枠 ---------- */
+.nat {
+  padding-block: var(--section-y);
+}
+.nat-wrap {
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ============ セクション見出し ============ */
+.nat-head {
+  max-width: 52ch;
+  margin-bottom: clamp(48px, 7vw, 96px);
+}
+.nat-head-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-5);
+}
+.nat-eyebrow {
+  color: var(--ink-muted);
+}
+.nat-plate {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+}
+.nat-title {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  line-height: var(--lh-h1);
+  text-wrap: balance;
+  margin-bottom: var(--sp-5);
+}
+.nat-lede {
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  max-width: var(--reading);
+}
+
+/* 共通: ラベル体裁（英字ラベルのみ大文字化） */
+.nat .label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  line-height: var(--lh-tight);
+}
+
+/* サブ見出しのアイブロウ + タイトルの共通レイアウト */
+.nat-sub-eyebrow {
+  display: block;
+  color: var(--accent);
+  margin-bottom: var(--sp-3);
+}
+
+/* ============ 国別グループ数バーチャート ============ */
+.nat-chart {
+  margin-bottom: clamp(64px, 9vw, 120px);
+  padding: clamp(28px, 4vw, 48px);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+.nat-chart-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: clamp(28px, 4vw, 44px);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+.nat-chart-title {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+}
+.nat-chart-sub {
+  color: var(--ink-muted);
+}
+.nat-total {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.nat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.4vw, 26px);
+}
+.nat-bar {
+  display: grid;
+  grid-template-columns: 6.5em 1fr auto;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+/* 国名ラベル（色ドット + 名称） */
+.nat-bar-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.nat-bar-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+  /* 暗面の signal edge: 塗りドットに微発光 */
+  box-shadow: 0 0 10px 0 var(--edge);
+}
+
+/* バー本体（トラック + フィル） */
+.nat-bar-track {
+  position: relative;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  /* 末端の点灯ドットがトラック外へ僅かに滲めるよう clip しない。
+     フィルは自身の border-radius で丸められるため overflow は不要。 */
+  overflow: visible;
+}
+.nat-bar-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 0;
+  border-radius: var(--radius-pill);
+  background: var(--edge);
+  /* バー伸長：SPEC のイージングで 900ms。数値カウントアップ（nations.js）と同期。 */
+  transition: width 900ms var(--ease);
+  will-change: width;
+}
+/* バー末端の「点灯」ドット（国色）。フィルの右端に載り、伸長と共に移動する。
+   数値の到達点を光点で示し、平板さを解く。 */
+.nat-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: 50%;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--edge);
+  box-shadow: 0 0 8px 0 var(--edge);
+  transform: translate(50%, -50%);
+  /* フィル幅が 0 の初期は点灯させない（左端にドットが残らないように） */
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease);
+}
+/* リビール完了時（.is-visible が nat-chart に付与される）に幅を確定値へ */
+.nat-chart.is-visible .nat-bar-fill {
+  width: var(--bar-w, 0%);
+}
+.nat-chart.is-visible .nat-bar-fill::after {
+  opacity: 1;
+  /* 伸長の終盤で点が灯るよう、僅かに遅らせる（バーが到達してから点灯） */
+  transition-delay: 620ms;
+}
+
+/* ホバーで該当行以外を減光し、視線を1国に集める（読み物としてのフォーカス誘導）。 */
+.nat-bars:hover .nat-bar {
+  transition: opacity var(--dur-quick) var(--ease);
+}
+.nat-bars:hover .nat-bar:not(:hover) {
+  opacity: 0.42;
+}
+
+/* 件数 */
+.nat-bar-count {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  min-width: 4.5em;
+  text-align: right;
+  white-space: nowrap;
+}
+.nat-bar-count b {
+  font-weight: var(--fw-semibold);
+}
+.nat-bar-pct {
+  /* % は件数に従属する補足。階調を一段落として控えめに（読みの主役は「N 組織」）。 */
+  color: color-mix(in srgb, var(--ink-muted) 78%, transparent);
+  font-weight: var(--fw-body);
+  font-size: 0.86em;
+  letter-spacing: 0.01em;
+  margin-inline-start: 0.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 最大勢力（中国）を細い朱下線で静かに強調 */
+.nat-bar.is-lead .nat-bar-count b {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+}
+
+/* ============ 国別プロファイルカード ============ */
+.nat-profiles-head {
+  margin-bottom: clamp(32px, 4vw, 48px);
+}
+.nat-profiles-title,
+.nat-nexus-title {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+}
+
+.nat-profiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--grid-gap);
+  margin-bottom: clamp(72px, 10vw, 128px);
+}
+
+.nat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  /* signal edge は ::before の 2px + 微発光に一本化する（実線縁との二重描画を避ける）。
+     左辺の実線は透明にし、SPEC §7.9「左端 2px の国色発光縁」を1本だけ灯す。 */
+  border-inline-start-color: transparent;
+  overflow: hidden;
+  transition:
+    transform var(--dur-hover) var(--ease),
+    background-color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+.nat-card::before {
+  /* 左縁の唯一の signal edge。ブラー/不透明度を抑え、沈んだ顔料の品位を保つ。 */
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 2px;
+  background: var(--edge);
+  box-shadow: 0 0 8px 0 var(--edge);
+  opacity: 0.5;
+  transition:
+    opacity var(--dur-hover) var(--ease),
+    box-shadow var(--dur-hover) var(--ease),
+    width var(--dur-hover) var(--ease);
+}
+/* ホバー: 発光縁を強め、面を僅かに持ち上げる（SPEC §7.5 の抑制されたホバー）。 */
+.nat-card:hover {
+  transform: translateY(-4px);
+  background: var(--elevated-hover);
+  border-color: color-mix(in srgb, var(--edge) 26%, var(--line));
+}
+.nat-card:hover::before {
+  width: 3px;
+  opacity: 1;
+  box-shadow: 0 0 14px 0 var(--edge);
+}
+
+.nat-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+.nat-card-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.nat-card-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+  box-shadow: 0 0 10px 0 var(--edge);
+  transition: box-shadow var(--dur-hover) var(--ease);
+}
+.nat-card:hover .nat-card-dot {
+  box-shadow: 0 0 16px 0 var(--edge);
+}
+.nat-card-country {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-tight);
+}
+/* 件数バッジ（大数字 Metric 縮小版 + ラベル） */
+.nat-card-count {
+  text-align: right;
+  line-height: 1;
+  flex: none;
+}
+.nat-card-num {
+  display: block;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.nat-card-num-label {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.nat-card-headline {
+  font-size: var(--fs-body-l);
+  font-weight: var(--fw-medium);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+  margin-bottom: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+.nat-card-body {
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  margin-bottom: var(--sp-5);
+}
+
+/* 傾向ハイライト（箇条） */
+.nat-card-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+}
+.nat-card-hl {
+  position: relative;
+  padding-inline-start: 18px;
+  font-size: var(--fs-body-s);
+  line-height: 1.6;
+  color: var(--ink);
+}
+.nat-card-hl::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--edge);
+}
+
+/* 代表グループチップ群 */
+.nat-card-reps {
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+.nat-card-reps-label {
+  display: block;
+  color: var(--ink-muted);
+  margin-bottom: var(--sp-3);
+}
+.nat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* 代表グループチップ（クリックで apt:open） */
+.nat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 11px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--fs-body-s);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease),
+              color var(--dur-quick) var(--ease);
+}
+.nat-chip .nat-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+  transition: box-shadow var(--dur-quick) var(--ease);
+}
+.nat-chip:hover {
+  border-color: var(--edge);
+  background: color-mix(in srgb, var(--edge) 12%, transparent);
+}
+/* ホバーで色ドットが点灯し、カード/バーの signal edge と造形を統一する。 */
+.nat-chip:hover .nat-chip-dot {
+  box-shadow: 0 0 8px 0 var(--edge);
+}
+.nat-chip:focus-visible {
+  outline: var(--focus-width) solid var(--accent-ring);
+  outline-offset: var(--focus-offset);
+}
+.nat-chip:focus-visible .nat-chip-dot {
+  box-shadow: 0 0 8px 0 var(--edge);
+}
+
+/* ============ 地域と標的の関係（相関考察） ============ */
+.nat-nexus-head {
+  max-width: 52ch;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+.nat-nexus-lede {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  max-width: var(--reading);
+}
+
+.nat-nexus-list {
+  display: flex;
+  flex-direction: column;
+}
+/* 各対応行: 国 → 標的傾向。表ではなく、罫線で仕切る編纂的レイアウト */
+.nat-nexus-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(9em, 12em) 1fr;
+  align-items: start;
+  gap: clamp(20px, 4vw, 56px);
+  padding-block: clamp(22px, 3vw, 32px);
+  padding-inline: clamp(12px, 2vw, 20px);
+  /* 負のインセットで、行内パディングが罫線・レイアウト幅を崩さないよう相殺する。 */
+  margin-inline: calc(-1 * clamp(12px, 2vw, 20px));
+  border-top: 1px solid var(--line);
+  transition:
+    opacity var(--dur-quick) var(--ease),
+    background-color var(--dur-quick) var(--ease);
+}
+.nat-nexus-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* 読み物としてのフォーカス誘導: ある行にホバーすると、
+   その行の対応（国 → 標的）が締まり、他行は静かに退く。 */
+.nat-nexus-list:hover .nat-nexus-row:not(:hover) {
+  opacity: 0.5;
+}
+.nat-nexus-row:hover {
+  background: color-mix(in srgb, var(--edge) 6%, transparent);
+}
+.nat-nexus-row:hover .nat-nexus-dot {
+  box-shadow: 0 0 14px 0 var(--edge);
+}
+.nat-nexus-row:hover .nat-nexus-arrow {
+  color: var(--accent-deep);
+}
+.nat-nexus-row:hover .nat-nexus-tag {
+  border-color: color-mix(in srgb, var(--edge) 42%, var(--line));
+}
+
+/* 左: 国名 + ドット + 件数 */
+.nat-nexus-country {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.nat-nexus-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-tight);
+  color: var(--ink);
+}
+.nat-nexus-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+  box-shadow: 0 0 10px 0 var(--edge);
+  transition: box-shadow var(--dur-quick) var(--ease);
+}
+.nat-nexus-n {
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  padding-inline-start: calc(10px + var(--sp-3));
+}
+
+/* 右: 標的傾向。矢印記号 + キーワードタグ + 説明 */
+.nat-nexus-target {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.nat-nexus-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.nat-nexus-arrow {
+  color: var(--accent);
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-semibold);
+  margin-inline-end: 2px;
+  flex: none;
+  transition: color var(--dur-quick) var(--ease);
+}
+.nat-nexus-tag {
+  display: inline-flex;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--edge) 10%, transparent);
+  white-space: nowrap;
+  transition: border-color var(--dur-quick) var(--ease);
+}
+.nat-nexus-desc {
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+  max-width: 48ch;
+}
+
+/* ============ レスポンシブ ============ */
+@media (max-width: 768px) {
+  .nat-bar {
+    grid-template-columns: 5.5em 1fr;
+    grid-template-areas:
+      "name  count"
+      "track track";
+    gap: var(--sp-2) var(--sp-3);
+  }
+  .nat-bar-name  { grid-area: name; }
+  .nat-bar-count { grid-area: count; min-width: 0; }
+  .nat-bar-track { grid-area: track; }
+
+  .nat-nexus-row {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+@media (max-width: 560px) {
+  .nat-profiles {
+    grid-template-columns: 1fr;
+  }
+  .nat-chart-head {
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+}
+
+/* ============ prefers-reduced-motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  /* 本セクションの追加モーションを一括で即時化する。 */
+  .nat *,
+  .nat *::before,
+  .nat *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  /* ホバーの浮き（translateY）も無効化し、面の変化のみに落とす。 */
+  .nat-card:hover {
+    transform: none !important;
+  }
+  /* リビール未発火でもバーを最終状態に（main.js が .is-visible を付けない場合の保険） */
+  .nat-bar-fill {
+    width: var(--bar-w, 0%);
+  }
+  /* 末端の点灯ドットは最終状態で常時表示（遅延点灯を待たない）。 */
+  .nat-bar-fill::after {
+    opacity: 1;
+  }
+}
