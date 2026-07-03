@@ -14,8 +14,36 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F5F3EE">
 
-  <!-- CSS 読込順（厳守）: tokens → base → intro → nations → network → explorer -->
+  <!-- FOUC 防止：CSS 読込より前に、保存済みテーマを html[data-theme] へ即時反映する。
+       localStorage 読取のみの極小スクリプト。失敗しても既定（編纂）へ無害にフォールバック。
+       完全なテーマ適用・永続化・ポップオーバー制御は末尾の js/theme.js が担う。 -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('apt-atlas-theme');
+        // テーマ→明面地色（各テーマ CSS の --paper と一致。theme.js の ground と単一の真実）。
+        var ground = {
+          glass: '#E9EDF3', abyss: '#0B1016', beach: '#FBF3E2', terminal: '#0B140F'
+        };
+        if (t && ground[t]) {
+          document.documentElement.setAttribute('data-theme', t);
+          // モバイル UI 帯（アドレスバー）の色も即時更新し、暗色テーマの
+          // 一瞬の明色ちらつきを防ぐ（完全同期は末尾 js/theme.js）。
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', ground[t]);
+        }
+      } catch (e) { /* localStorage 不可 → 既定（編纂）のまま */ }
+    })();
+  </script>
+
+  <!-- CSS 読込順（厳守）: tokens → themes(空殻×4) → base → intro → nations → network → explorer
+       テーマ CSS は tokens.css の直後・base.css の前。html[data-theme] スコープで
+       トークンだけを上書きするため、コンポーネント CSS はその値を参照して描画される。 -->
   <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/themes/glass.css">
+  <link rel="stylesheet" href="css/themes/abyss.css">
+  <link rel="stylesheet" href="css/themes/beach.css">
+  <link rel="stylesheet" href="css/themes/terminal.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/intro.css">
   <link rel="stylesheet" href="css/nations.css">
@@ -46,6 +74,34 @@
         <a class="nav-link" href="#nations">国家・地域</a>
         <a class="nav-link" href="#network">関係ネットワーク</a>
         <a class="nav-link" href="#explorer">全グループ</a>
+      </div>
+
+      <!-- テーマ切替：現テーマのスウォッチ小円＋ラベル。クリックでポップオーバー。
+           モバイル幅でもナビ内に残す（ナビリンクより優先して表示）。 -->
+      <div class="theme-switch" id="theme-switch">
+        <button
+          type="button"
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          aria-controls="theme-menu"
+          aria-label="デザインテーマを切り替える"
+        >
+          <span class="theme-toggle-swatch" aria-hidden="true">
+            <span class="theme-toggle-swatch-a"></span>
+            <span class="theme-toggle-swatch-b"></span>
+          </span>
+          <span class="theme-toggle-label" id="theme-toggle-label">テーマ</span>
+          <svg class="theme-toggle-caret" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+            <path d="M2.5 4.5 L6 8 L9.5 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="theme-menu" id="theme-menu" role="menu" aria-label="デザインテーマ" hidden>
+          <p class="theme-menu-head" id="theme-menu-head" aria-hidden="true">デザインテーマ</p>
+          <!-- 5テーマの項目は js/theme.js が生成する（スウォッチ2色＋和名＋英字） -->
+        </div>
       </div>
     </nav>
   </header>
@@ -675,6 +731,7 @@
        ========================================================= -->
   <script src="data.js"></script>
   <script src="relations.js"></script>
+  <script src="js/theme.js"></script>
   <script src="js/main.js"></script>
   <script src="js/nations.js"></script>
   <script src="js/network.js"></script>

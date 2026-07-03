@@ -1,0 +1,223 @@
+/* =============================================================
+   APT ATLAS — テーマ「端末 / Terminal」
+   ID: terminal ／ 和名: 端末 ／ EN: Terminal
+
+   世界観: 「静かな管制室」。CRT 端末のグリーンフォスファー。
+   全面ほぼ黒。明暗は輝度の階調（明面=わずかに持ち上げた黒 / 暗面=沈めた黒）。
+   文字は落ち着いた燐光グリーン、アクセントは高輝度グリーン、国別6色は
+   端末パレット（amber / green / cyan / magenta / white / gray）へ再マップ。
+   質感はごく微かなスキャンラインと見出しの極微グロー、ヒーローの █ カーソル。
+   過剰なグリッチ・ネオンは禁止 — 気配レベルに抑える。
+
+   契約（THEME_GUIDE.md）:
+     - 全ルールは html[data-theme="terminal"] スコープ配下。:root / 素の .vault
+       へは直書きしない。二層（明面 + .vault 暗面）で上書きする。
+     - 寸法・レイアウト・タイポ寸法系は不変。変更可は 色・不透明度・ぼかし・
+       角丸・書体ファミリ（システム等幅スタックのみ）。
+     - 本文コントラスト 4.5:1 以上厳守（本テーマは実測 13:1 以上）。
+     - 追加モーションは reduced-motion で即時停止。
+   ============================================================= */
+
+/* =============================================================
+   1. 明面（Paper 由来の章：ヒーロー / intro 上半 / 探索 / ナビ）
+      — わずかに緑がかった "持ち上げた黒"
+   ============================================================= */
+html[data-theme="terminal"] {
+  /* ---- 地 ---- */
+  --paper: #0B140F;              /* 明の地（持ち上げた黒） */
+  --vault: #050A07;             /* 暗の地（沈めた黒）。両面から参照される固定色 */
+
+  /* ---- インク & 階調（明面） ---- */
+  --ink: #B8F0C6;               /* 本文・見出し = 落ち着いた燐光グリーン（実測 14.5:1） */
+  --ink-muted: #7FB894;         /* 副次テキスト（実測 8.2:1） */
+  --line: #24322A;              /* ヘアライン（緑がかった暗灰。気配の罫） */
+  --elevated: #0F1A13;          /* カード面（地より一段持ち上げた黒緑） */
+  --elevated-hover: #142218;    /* カード面ホバー */
+
+  /* ---- アクセント（唯一のブランド色 = 高輝度フォスファーグリーン） ---- */
+  --accent: #4FE07E;                        /* 図録番号・タブ・リンク・強調（実測 11:1） */
+  --accent-deep: #35BE62;                   /* ホバー・押下の深色 */
+  --accent-soft: rgba(79, 224, 126, 0.13);  /* 淡面（ホバー地・淡チップ） */
+  --accent-ring: rgba(79, 224, 126, 0.92);  /* フォーカスリング */
+  --accent-fg: #04140A;                     /* 高輝度緑面の上に載る文字（沈めた黒緑・実測 11:1） */
+
+  /* ---- 国別6色（端末パレットへ再マップ / 識別専用） ----
+     CN=amber（最大勢力・警告的な琥珀）／ IR=emerald（深緑）／ KP=cyan ／
+     RU=magenta ／ VN=near-white phosphor ／ UN=gray（未公表=減光）。
+     accent の緑と衝突しないよう、CN は琥珀、IR は accent より暗い深緑にして
+     輝度で分離する。全色とも両地の上で 3:1 以上（実測 5.7〜16:1）。 */
+  --c-cn: #E6A73E;   /* 中国   amber   */
+  --c-ir: #2FA574;   /* イラン emerald */
+  --c-kp: #46C8DC;   /* 北朝鮮 cyan    */
+  --c-ru: #C874D6;   /* ロシア magenta */
+  --c-vn: #CFE3D6;   /* ベトナム white  */
+  --c-un: #7E938A;   /* 未公表 gray    */
+
+  /* ---- 影（暗地では黒影は効かない → 緑の微光を極僅かに帯びさせる） ---- */
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.66),
+                  0 0 0 1px rgba(79, 224, 126, 0.06);
+  --shadow-plate-rest: 0 0 0 rgba(0, 0, 0, 0);
+  --shadow-plate-hover: 0 14px 34px -14px rgba(0, 0, 0, 0.72);
+
+  /* ---- ガラス / 幕 ---- */
+  --glass-nav: rgba(9, 18, 13, 0.78);       /* 地の半透明（暗色） */
+  --glass-blur: 12px;
+  --overlay: rgba(2, 6, 4, 0.72);           /* モーダル背景幕（最暗の半透明） */
+  --overlay-blur: 7px;
+
+  /* ---- 極薄テクスチャ / 星図（明面・気配レベル） ---- */
+  --texture-ink: rgba(79, 224, 126, 0.035);      /* 明面の緑地紋 */
+  --texture-lift: rgba(79, 224, 126, 0.035);     /* 額装の光の持ち上げ（緑寄せ） */
+  --star-line: rgba(79, 224, 126, 0.05);         /* 星図の結線（走査線グリーン） */
+  --star-node: rgba(79, 224, 126, 0.07);         /* 星図の点 */
+  --star-node-pulse: rgba(79, 224, 126, 0.16);   /* 明滅点（opacity で明滅） */
+
+  /* ---- 選択（::selection）— 高輝度緑地に沈めた黒緑文字 ---- */
+  --select-bg: var(--accent);
+  --select-fg: #04140A;
+
+  /* ---- 造形：端末は角を落とす（硬質なプレート） ---- */
+  --radius-card: 2px;
+  --radius-modal: 3px;
+  --radius-chip: 1px;
+  --radius-pill: 3px;   /* ピルも端末では角ばらせる（丸ピル → 極小角丸の "枠" へ） */
+
+  /* ---- 書体：等幅スタック（唯一フォント変更を許すテーマ）。
+       和文は等幅欧文の後段に置き、可読性を確保。行間・字間は base の
+       トークンに委ねる（寸法は不変）。 ---- */
+  --font: "SFMono-Regular", "SF Mono", "Cascadia Mono", "Consolas",
+          "Menlo", "DejaVu Sans Mono", "Liberation Mono",
+          "BIZ UDGothic", "Yu Gothic UI", "Meiryo", monospace;
+}
+
+/* =============================================================
+   2. 暗面（.vault 章：intro 下半 / nations / network / footer）
+      — 最も沈めた黒。国色は最暗部で確かに "灯る"
+   ============================================================= */
+html[data-theme="terminal"] .vault {
+  --vault: #050A07;
+  --ink: #B8F0C6;               /* 生成りの白墨 → 燐光グリーン（実測 15.5:1） */
+  --ink-muted: #7FB894;         /* 実測 8.7:1 */
+  --line: #1A241D;              /* 最暗部のヘアライン（更に沈める） */
+  --elevated: #0A130D;          /* カード面 */
+  --elevated-hover: #0F1B13;    /* カード面ホバー */
+
+  /* 暗面テクスチャは緑寄りの微光へ（額装の持ち上げ） */
+  --texture-lift: rgba(79, 224, 126, 0.03);
+}
+
+/* =============================================================
+   3. スキャンライン — ごく微かな走査線（3〜4%）
+      地を敷く主要サーフェスに repeating-linear-gradient を重ねる。
+      背景色（var(--paper)/var(--vault)）は各コンポーネント CSS が敷くので、
+      ここでは background-image のみ追加し、色指定は上書きしない。
+      1px 走査 / 3px 周期。pointer-events や可読性に影響しない気配レベル。
+   ============================================================= */
+html[data-theme="terminal"] body {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0,
+    rgba(0, 0, 0, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  /* body の地はヒーロー（不透明な章地を持たない）に走査線を敷くための下地。
+     opaque な章（.intro-paper / .vault / .exp / .net-stage）はその上を
+     完全に覆うため、body 走査線と章走査線が同時に見えることはない
+     → attachment は既定（scroll）で十分。fixed は全面再描画を招くため使わない。 */
+}
+
+/* 章ごとの地サーフェスにも同じ走査線を重ね、明暗の境で途切れないようにする。
+   background-image のみを足し、地色は各 CSS の background（--paper/--vault）に委ねる。 */
+html[data-theme="terminal"] .intro-paper,
+html[data-theme="terminal"] .intro-vault,
+html[data-theme="terminal"] .exp,
+html[data-theme="terminal"] .vault,
+html[data-theme="terminal"] .net-stage {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.20) 0,
+    rgba(0, 0, 0, 0.20) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* .net-stage は地紋（radial）を持つため、走査線を「上に」重ねて両立させる。
+   元の radial + vault を保持しつつ、先頭に走査線レイヤーを積む。 */
+html[data-theme="terminal"] .net-stage {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.20) 0,
+      rgba(0, 0, 0, 0.20) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(120% 82% at 50% 40%, var(--texture-lift), transparent 64%),
+    var(--vault);
+}
+
+/* =============================================================
+   4. 見出しの極微グロー — フォスファーの残光。
+      大面積の見出しにのみ、極僅かな text-shadow を与える（燐光のにじみ）。
+      本文・ラベル・数字には掛けない（可読性最優先・にじみは見出し限定）。
+   ============================================================= */
+html[data-theme="terminal"] .hero-title .display,
+html[data-theme="terminal"] .intro-title,
+html[data-theme="terminal"] .nat-title,
+html[data-theme="terminal"] .net-title,
+html[data-theme="terminal"] .exp-title {
+  text-shadow: 0 0 18px rgba(79, 224, 126, 0.12);
+}
+
+/* 図録番号・章ラベルの朱（→緑）にも、点いた LED 様の極僅かな残光を許す。
+   小面積かつ元から高コントラストなので、可読性を損なわない範囲に留める。 */
+html[data-theme="terminal"] .plate-no,
+html[data-theme="terminal"] .exp-plate-no,
+html[data-theme="terminal"] .intro-plate-no,
+html[data-theme="terminal"] .nat-plate,
+html[data-theme="terminal"] .net-plate {
+  text-shadow: 0 0 10px rgba(79, 224, 126, 0.16);
+}
+
+/* =============================================================
+   5. ヒーローのカーソル明滅（█）— 気配レベル、1箇所のみ。
+      大見出し直後に点滅するブロックカーソルを添える（端末のプロンプト）。
+      theme.js/DOM を変えず、::after で純 CSS 生成。reduced-motion で点灯静止。
+   ============================================================= */
+html[data-theme="terminal"] .hero-title .display::after {
+  content: "\2588";              /* █ FULL BLOCK */
+  display: inline;
+  margin-inline-start: 0.12em;
+  color: var(--accent);
+  font-weight: inherit;
+  /* 見出しに掛けた残光と揃える */
+  text-shadow: 0 0 14px rgba(79, 224, 126, 0.35);
+  animation: terminal-caret 1.15s steps(1, end) infinite;
+}
+
+@keyframes terminal-caret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* =============================================================
+   6. ナビ・ブランドの微調整
+      端末では丸ドットも走査線世界の "電源 LED" として微発光させる。
+   ============================================================= */
+html[data-theme="terminal"] .nav-brand-mark::before,
+html[data-theme="terminal"] .foot-brand-mark::before {
+  box-shadow: 0 0 8px 0 rgba(79, 224, 126, 0.55);
+}
+
+/* =============================================================
+   7. reduced-motion — 追加したモーションを即時停止。
+      カーソルは点灯（opacity:1）で静止させ、気配だけ残す。
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="terminal"] .hero-title .display::after {
+    animation: none !important;
+    opacity: 1;
+  }
+}

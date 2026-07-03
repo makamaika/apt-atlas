@@ -1,0 +1,346 @@
+/* =============================================================
+   APT ATLAS — テーマ「硝子 / Glass（Liquid Glass）」
+   ID: glass ／ 和名: 硝子 ／ EN: Liquid Glass
+
+   Apple の Liquid Glass デザイン言語（iOS/macOS 2025）の解釈。
+   「色替え」ではなく「素材の再構築」— すべての面を、淡いオーロラの
+   地に浮かぶフロスト硝子の板として捉え直す。
+
+   ▍契約（THEME_GUIDE.md 準拠）:
+     - 全ルールを html[data-theme="glass"] スコープ配下に置く。
+     - 明面 = html[data-theme="glass"] {...}、
+       暗面 = html[data-theme="glass"] .vault {...} の二層でトークン上書き。
+     - 寸法・レイアウト・タイポ寸法系トークンは一切触れない。
+       変更したのは色・不透明度・ぼかし・角丸・書体ファミリのみ。
+     - 追加した装飾は既存クラスへの付加のみ（DOM 構造は不変）。
+     - 追加トランジション／アニメは末尾で reduced-motion 時に即時化。
+     - 本文 4.5:1 以上厳守（ink 明面 13.3:1 / 暗面 15.8:1、
+       ink-muted 明面 6.0:1 / 暗面 7.7:1、accent 文字は両面 4.6:1 以上）。
+
+   ▍地色メタ（js/theme.js と一致）: sw=['#E9EDF3','#5B7CA6'], ground='#E9EDF3'（=--paper）。
+   ============================================================= */
+
+/* =============================================================
+   1. 明面トークン（Paper 章 / フロスト硝子・冷たいグラファイト）
+   ============================================================= */
+html[data-theme="glass"] {
+  /* 地：ごく淡いオーロラ調の冷たい白（彩度は極めて低く上品に）。
+     真の多色グラデーションは body に固定背景として敷き、ここは
+     チップ等が不透明参照する際の実効ベース色として据える。 */
+  --paper: #E9EDF3;
+
+  /* インク：冷たいグラファイト。硝子に映えるよう純黒を避ける。 */
+  --ink: #1B2430;         /* on paper 13.3:1 / on card 14.5:1 */
+  --ink-muted: #4E5A6B;   /* on paper 6.0:1 / on card 6.5:1 */
+
+  /* ヘアライン：硝子の稜線。白寄りの冷罫。 */
+  --line: rgba(27, 36, 48, 0.14);
+
+  /* カード面：フロスト硝子。半透明にして地のオーロラを透かす。
+     backdrop-filter は §5 で大面のみに付与（性能配慮）。
+     コントラストは「実効合成色 ≈ #F1F4FA」相当で担保（ink 14:1）。 */
+  --elevated: rgba(247, 250, 254, 0.72);
+  --elevated-hover: rgba(252, 253, 255, 0.86);
+
+  /* アクセント：硝子に映えるサファイア（朱から一貫して置換）。
+     文字用途に耐える濃さ（on paper 4.64:1 / on card 5.0:1）。 */
+  --accent: #2F6BB0;
+  --accent-deep: #24548C;
+  --accent-soft: rgba(47, 107, 176, 0.12);
+  --accent-ring: rgba(47, 107, 176, 0.92);
+  --accent-fg: #FFFFFF;   /* on accent 5.45:1 */
+
+  /* 国別6色：沈んだ顔料を硝子地に合わせ、明面で相互識別（各 ≥3:1）。 */
+  --c-cn: #B23A44;   /* 中国   4.99:1 */
+  --c-ir: #2E7D66;   /* イラン 4.21:1 */
+  --c-kp: #3E63B8;   /* 北朝鮮 4.85:1 */
+  --c-ru: #7B54C0;   /* ロシア 4.62:1 */
+  --c-vn: #A6720F;   /* ベトナム 3.55:1 */
+  --c-un: #64707E;   /* 未公表 4.30:1 */
+
+  /* 造形：Liquid Glass は角丸を大きめに。硬質プレートから丸みのある硝子へ。 */
+  --radius-card: 16px;
+  --radius-modal: 20px;
+  --radius-chip: 8px;
+  /* --radius-pill は 999px のまま（ピルはピル） */
+
+  /* 影：硝子は影を弱く・冷たく（青みを帯びた拡散影）。 */
+  --shadow-modal: 0 28px 90px rgba(24, 44, 74, 0.28), 0 2px 10px rgba(24, 44, 74, 0.12);
+  --shadow-plate-rest: 0 0 0 rgba(24, 44, 74, 0);
+  --shadow-plate-hover: 0 18px 44px -18px rgba(24, 44, 74, 0.30);
+
+  /* ガラス・幕：ナビ／ポップオーバーは地のオーロラの半透明。ぼかしは強め。 */
+  --glass-nav: rgba(233, 238, 245, 0.62);
+  --glass-blur: 22px;
+  --overlay: rgba(18, 30, 48, 0.44);
+  --overlay-blur: 14px;
+
+  /* テクスチャ／星図：新しい淡い地に合わせ「気配レベル」に沈める。 */
+  --texture-ink: rgba(27, 36, 48, 0.030);
+  --star-line: rgba(47, 96, 168, 0.055);       /* 結線＝サファイア極薄 */
+  --star-node: rgba(47, 107, 176, 0.075);      /* 点＝サファイア極薄 */
+  --star-node-pulse: rgba(47, 107, 176, 0.16); /* 明滅点（opacity で往復） */
+
+  /* 選択：サファイア地に紙色文字。 */
+  --select-bg: var(--accent);
+  --select-fg: #EEF3F9;   /* on accent 4.64:1 */
+}
+
+/* =============================================================
+   2. 暗面トークン（Vault 章 / スモークガラス・奥に星が灯る）
+   同名トークンを上書き。明面と一貫した光学系を保つ。
+   ============================================================= */
+html[data-theme="glass"] .vault {
+  /* 暗の地：深い青みのグラファイト＝スモークガラス。 */
+  --vault: #0C1119;
+
+  --ink: #E6EBF2;         /* on vault 15.8:1 / on card 14.1:1 */
+  --ink-muted: #9AA6B6;   /* on vault 7.7:1 / on card 6.9:1 */
+
+  --line: rgba(210, 222, 240, 0.12);
+
+  /* スモークガラス面：暗い半透明。地の器（--vault）を透かす。 */
+  --elevated: rgba(24, 32, 45, 0.66);
+  --elevated-hover: rgba(31, 41, 56, 0.80);
+
+  /* アクセント：暗地では基準サファイアが沈むため、同系の明るいサファイアへ。
+     小ラベル・リンク文字として on vault 6.48:1 / on card 5.79:1 を確保。 */
+  --accent: #5C9BDD;
+  --accent-deep: #7CB3EC;
+  --accent-soft: rgba(92, 155, 221, 0.16);
+  --accent-ring: rgba(92, 155, 221, 0.95);
+  --accent-fg: #0C1119;   /* 明サファイア面上は暗文字 6.48:1 */
+
+  /* 国別6色：スモークガラスの奥で「灯る」明度へ（各 ≥4.2:1 on vault）。 */
+  --c-cn: #D6555C;   /* 中国   4.79:1 */
+  --c-ir: #3FA485;   /* イラン 6.18:1 */
+  --c-kp: #5C82D6;   /* 北朝鮮 5.06:1 */
+  --c-ru: #A579E0;   /* ロシア 5.78:1 */
+  --c-vn: #D9A23C;   /* ベトナム 8.27:1 */
+  --c-un: #8894A6;   /* 未公表 6.16:1 */
+
+  /* 影・幕・ぼかしは明面から継承（--radius-*/--glass-blur も継承）。 */
+  --shadow-modal: 0 28px 90px rgba(0, 0, 0, 0.55), 0 2px 12px rgba(0, 0, 0, 0.4);
+  --glass-nav: rgba(12, 17, 25, 0.58);
+
+  /* 暗面テクスチャ：額装の光の持ち上げ（星図の器の下地）。 */
+  --texture-lift: rgba(150, 185, 235, 0.045);
+
+  --select-bg: var(--accent);
+  --select-fg: #0C1119;   /* 明サファイア地に暗文字 6.48:1 */
+}
+
+/* =============================================================
+   3. 地のオーロラ（固定背景・スクロールに奥行き）
+   純白ではなく、ごく淡い多色（青紫〜暖白）の低彩度グラデーション。
+   background-attachment: fixed で、面が硝子として上を流れる感覚を出す。
+   ============================================================= */
+html[data-theme="glass"] body {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(120% 90% at 12% 4%, rgba(120, 152, 210, 0.30), transparent 55%),
+    radial-gradient(110% 80% at 92% 10%, rgba(176, 150, 210, 0.24), transparent 52%),
+    radial-gradient(130% 100% at 78% 96%, rgba(126, 186, 206, 0.22), transparent 58%),
+    radial-gradient(120% 90% at 30% 88%, rgba(228, 214, 196, 0.24), transparent 60%);
+  background-attachment: fixed, fixed, fixed, fixed;
+  background-repeat: no-repeat;
+}
+
+/* 明面章の地（intro-paper / explorer）を半透明の硝子板にし、
+   下の body オーロラを透かす。境界のシャープさは各章の面が保つ。 */
+html[data-theme="glass"] .intro-paper,
+html[data-theme="glass"] .exp {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.10) 40%, transparent),
+    rgba(233, 238, 245, 0.40);
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+}
+
+/* 暗面章の地（intro-vault / nations / network / footer）＝スモークガラス。
+   .vault が敷く --vault 純色の上に、奥のオーロラを僅かに滲ませる。 */
+html[data-theme="glass"] .intro-vault,
+html[data-theme="glass"] .nat,
+html[data-theme="glass"] .net,
+html[data-theme="glass"] .foot {
+  background-color: var(--vault);
+  background-image:
+    radial-gradient(120% 88% at 16% 0%, rgba(70, 96, 150, 0.22), transparent 56%),
+    radial-gradient(120% 92% at 88% 100%, rgba(96, 74, 140, 0.18), transparent 58%);
+}
+
+/* =============================================================
+   4. フロスト硝子の質感（大面のみ backdrop-filter）
+   カード／ナビ／モーダル／ポップオーバー／図の器に、
+   ・上辺 1px の鏡面ハイライト（白の高透過グラデ）
+   ・内側の微かな光彩（inset の淡い白リング）
+   ・地を屈折させる blur + saturate
+   を付与し「厚みのある硝子」を表す。DOM は不変。
+   ============================================================= */
+
+/* ---- 明面：標本プレート・特徴カード・空状態・検索ピル・凡例類 ---- */
+html[data-theme="glass"] .exp-plate,
+html[data-theme="glass"] .intro-trait,
+html[data-theme="glass"] .exp-empty,
+html[data-theme="glass"] .exp-search,
+html[data-theme="glass"] .exp-modal {
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+          backdrop-filter: blur(18px) saturate(1.4);
+  /* 上辺の鏡面ハイライト＋内側の微光彩（硝子の厚み）。 */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+/* プレートは rest 影と鏡面を両立させる（rest は無影なので上書き衝突なし）。 */
+html[data-theme="glass"] .exp-plate {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    var(--shadow-plate-rest);
+}
+html[data-theme="glass"] .exp-plate:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.80),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    var(--shadow-plate-hover);
+}
+
+/* ---- 明面：ナビ（スクロール時のガラスバー） ---- */
+html[data-theme="glass"] .nav.is-scrolled {
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+          backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* ---- テーマ切替 UI（トグル＝小面なので半透明のみ、ポップオーバー＝大面） ---- */
+html[data-theme="glass"] .theme-menu {
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+          backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+  box-shadow:
+    var(--shadow-modal),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* ---- モーダルの厚み（明面パネル） ---- */
+html[data-theme="glass"] .exp-modal {
+  box-shadow:
+    var(--shadow-modal),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.20);
+}
+
+/* ---- 明面：チャート／プロファイルは暗面（.vault）配下なので下の暗面規則で扱う ---- */
+
+/* =============================================================
+   5. 暗面のスモークガラス（.vault 配下の面）
+   同じ光学系を暗色で。鏡面ハイライトは白の低透過、内光彩も控えめ。
+   ネットワーク器は「硝子の奥に星が灯る」趣にする。
+   ============================================================= */
+html[data-theme="glass"] .vault .nat-chart,
+html[data-theme="glass"] .vault .nat-card,
+html[data-theme="glass"] .vault .intro-purpose,
+html[data-theme="glass"] .vault .net-hl,
+html[data-theme="glass"] .vault .net-key,
+html[data-theme="glass"] .vault .net-tip {
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.16),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.05);
+}
+
+/* net-tip / モーダルは元から shadow-modal を持つので鏡面と両立させる。 */
+html[data-theme="glass"] .vault .net-tip {
+  box-shadow:
+    var(--shadow-modal),
+    inset 0 1px 0 rgba(210, 226, 250, 0.18);
+}
+
+/* ネットワーク図の器：スモークガラスの奥に星が灯る。
+   既存の radial(texture-lift)+vault の上に、硝子の内光彩と稜線を重ねる。 */
+html[data-theme="glass"] .vault .net-stage {
+  background:
+    radial-gradient(120% 82% at 50% 36%, var(--texture-lift), transparent 62%),
+    radial-gradient(140% 100% at 20% 0%, rgba(70, 100, 160, 0.14), transparent 55%),
+    radial-gradient(140% 100% at 84% 100%, rgba(96, 74, 140, 0.12), transparent 58%),
+    var(--vault);
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.14),
+    inset 0 0 60px rgba(120, 150, 210, 0.06);
+}
+
+/* 暗面カードのホバー鏡面を僅かに強める（硝子が持ち上がる）。 */
+html[data-theme="glass"] .vault .nat-card:hover,
+html[data-theme="glass"] .vault .intro-purpose:hover,
+html[data-theme="glass"] .vault .net-hl:hover,
+html[data-theme="glass"] .vault .net-hl:focus-visible {
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.24),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.08);
+}
+
+/* =============================================================
+   6. 小面は半透明のみ（性能：backdrop-filter を掛けない）
+   チップ・バッジ・タグは硝子の「淡い透け」だけで軽く扱う。
+   コントラストは実効合成色で担保（面が地に対し十分明度差を持つ）。
+   ============================================================= */
+html[data-theme="glass"] .chip,
+html[data-theme="glass"] .exp-chip-tag,
+html[data-theme="glass"] .exp-chip,
+html[data-theme="glass"] .badge {
+  background: rgba(247, 250, 254, 0.55);
+}
+html[data-theme="glass"] .vault .chip,
+html[data-theme="glass"] .vault .exp-chip-tag,
+html[data-theme="glass"] .vault .nat-nexus-tag {
+  background: rgba(210, 226, 250, 0.06);
+}
+
+/* =============================================================
+   6.5 性能フォールバック — 多数生成される面の backdrop-filter を
+   狭幅（モバイル／低〜中位機の代理指標）で無効化する。
+   .exp-plate は探索カードとして 39 枚生成され、.intro-trait や暗面の
+   .nat-card / .intro-purpose / .net-hl / .net-key / .net-tip も複数並ぶ。
+   これらに同時に blur が乗るとスクロール時の再合成コストが顕在化するため、
+   狭幅では blur を落とし、代わりに面の不透明度を上げて「フロスト硝子の
+   質感（半透明の透け）」と本文コントラストを保つ。blur はナビ／モーダル／
+   ポップオーバー／図の器（少数の大面）にのみ残す（それらは据え置き）。
+   ============================================================= */
+@media (max-width: 720px) {
+  html[data-theme="glass"] .exp-plate,
+  html[data-theme="glass"] .intro-trait,
+  html[data-theme="glass"] .exp-empty,
+  html[data-theme="glass"] .exp-search {
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    /* blur を失う分、地の透けを抑えて実効合成色の明度差（=本文コントラスト）を保つ。 */
+    background-color: rgba(247, 250, 254, 0.92);
+  }
+  html[data-theme="glass"] .vault .nat-chart,
+  html[data-theme="glass"] .vault .nat-card,
+  html[data-theme="glass"] .vault .intro-purpose,
+  html[data-theme="glass"] .vault .net-hl,
+  html[data-theme="glass"] .vault .net-key,
+  html[data-theme="glass"] .vault .net-tip {
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    background-color: rgba(24, 32, 45, 0.92);
+  }
+}
+
+/* =============================================================
+   7. reduced-motion — 本テーマは新規アニメーションを足していないが、
+   追加した backdrop-filter を含む面の遷移が既存 transition で
+   動く場合に備え、硝子固有の質感変化を即時化する（保険）。
+   既存章 CSS の transition プロパティは変更しない。
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="glass"] .exp-plate,
+  html[data-theme="glass"] .intro-trait,
+  html[data-theme="glass"] .nav.is-scrolled,
+  html[data-theme="glass"] .vault .nat-card,
+  html[data-theme="glass"] .vault .intro-purpose,
+  html[data-theme="glass"] .vault .net-hl {
+    transition: none;
+  }
+}

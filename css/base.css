@@ -196,7 +196,7 @@ h2,
   z-index: 100;
   padding: 10px 18px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-fg);
   border-radius: var(--radius-pill);
   font-size: var(--fs-body-s);
   transition: top var(--dur-quick) var(--ease);
@@ -373,7 +373,7 @@ h2,
 
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-fg);
 }
 
 .btn-primary:hover {
@@ -508,6 +508,232 @@ h2,
 }
 
 /* ===============================================================
+   テーマ切替 UI（ナビ右端）
+   造形は編纂の意匠（hairline / 朱）に馴染ませ、全テーマで破綻しない
+   中立設計。色はすべてトークン参照（テーマが差し替えても成立する）。
+   =============================================================== */
+.theme-switch {
+  position: relative;
+  flex: none;
+  margin-inline-start: var(--sp-2);
+}
+
+/* トグル：現テーマのスウォッチ小円（2色）＋ラベル＋キャレット */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 7px 12px 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated);
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-quick) var(--ease),
+    background-color var(--dur-quick) var(--ease),
+    color var(--dur-quick) var(--ease);
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.theme-toggle[aria-expanded="true"] {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.theme-toggle:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* スウォッチ小円：2色を左右に割った円。theme.js が --sw-a / --sw-b をセット。 */
+.theme-toggle-swatch {
+  position: relative;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.theme-toggle-swatch-a,
+.theme-toggle-swatch-b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+.theme-toggle-swatch-a { left: 0; background: var(--sw-a, var(--paper)); }
+.theme-toggle-swatch-b { right: 0; background: var(--sw-b, var(--accent)); }
+
+.theme-toggle-label {
+  font-weight: var(--fw-body);
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle-caret {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  color: var(--ink-muted);
+  transition: transform var(--dur-quick) var(--ease);
+}
+.theme-toggle[aria-expanded="true"] .theme-toggle-caret {
+  transform: rotate(180deg);
+}
+
+/* ---- ポップオーバー（コンパクトなメニュー） ---- */
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 70;
+  min-width: 220px;
+  padding: var(--sp-2);
+  background: var(--glass-nav);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-modal);
+  /* 開くときの微小な立ち上がり（reduced-motion で無効化） */
+  transform-origin: top right;
+  transition:
+    opacity var(--dur-quick) var(--ease),
+    transform var(--dur-quick) var(--ease);
+}
+.theme-menu[hidden] { display: none; }
+/* 閉→開のトランジション用初期状態（JS が .is-open を付ける） */
+.theme-menu:not(.is-open) {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  pointer-events: none;
+}
+.theme-menu.is-open {
+  opacity: 1;
+  transform: none;
+}
+
+.theme-menu-head {
+  margin: 0;
+  padding: 6px 10px 8px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-2);
+}
+
+/* テーマ項目（role=menuitemradio） */
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body-s);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease),
+    color var(--dur-quick) var(--ease);
+}
+.theme-option + .theme-option { margin-top: 2px; }
+.theme-option:hover {
+  background: var(--accent-soft);
+}
+.theme-option:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* 項目のスウォッチ（2色円） */
+.theme-option-swatch {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.theme-option-swatch-a,
+.theme-option-swatch-b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+.theme-option-swatch-a { left: 0; }
+.theme-option-swatch-b { right: 0; }
+
+.theme-option-names {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.theme-option-ja {
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  line-height: 1.3;
+}
+.theme-option-en {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* 選択中のチェック（朱の細いマーク） */
+.theme-option-check {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease);
+}
+.theme-option[aria-checked="true"] .theme-option-check { opacity: 1; }
+.theme-option[aria-checked="true"] .theme-option-ja {
+  color: var(--accent);
+}
+
+/* ---- 切替時の地・文字トランジション（.theme-switching を html に 150ms 付与）----
+   トークンが差し替わっても background/color が滑らかに追従するよう、
+   地を敷く主要サーフェスにのみ短いトランジションを掛ける。reduced-motion では無効。 */
+html.theme-switching body,
+html.theme-switching .vault,
+html.theme-switching .intro-paper,
+html.theme-switching .intro-vault,
+html.theme-switching .exp,
+html.theme-switching .nav.is-scrolled {
+  transition:
+    background-color 150ms var(--ease),
+    color 150ms var(--ease),
+    border-color 150ms var(--ease);
+}
+
+/* 720px 以下でナビリンクは消えるが、テーマ切替はナビ内に残す（優先）。
+   ラベルは畳んでスウォッチ＋キャレットのみのコンパクト表示にする。 */
+@media (max-width: 720px) {
+  .theme-toggle-label { display: none; }
+  .theme-toggle { padding: 7px 10px; }
+}
+
+/* ===============================================================
    HERO — 明 / Paper。第一印象。静的CSSのみ（重い動く背景は禁止）。
    ビューポートを 100svh 使い切る構図：リードは上部〜中央、統計は下辺近く。
    背後に超微細な星図モチーフ（気配レベル）を右側へ配置する。
@@ -537,8 +763,8 @@ h2,
   pointer-events: none;
   z-index: 0;
   /* 右端に向かってわずかに濃く、左（見出し側）へフェードして本文を邪魔しない。 */
-  -webkit-mask-image: linear-gradient(100deg, transparent 0%, rgba(0, 0, 0, 0.35) 34%, #000 78%);
-          mask-image: linear-gradient(100deg, transparent 0%, rgba(0, 0, 0, 0.35) 34%, #000 78%);
+  -webkit-mask-image: var(--hero-star-mask);
+          mask-image: var(--hero-star-mask);
 }
 
 .hero-star-lines line {
@@ -552,13 +778,16 @@ h2,
 }
 
 /* 明滅する点（2〜3個）— 極めてゆっくり。1画面で光を乱用しない気配レベル。
-   fill を上限アルファ（≈11%）に固定し、opacity で下限〜上限を往復させる。
+   fill を上限アルファ（=--star-node-pulse）に固定し、opacity で下限〜上限を往復させる。
    opacity は 1 で頭打ちのため、alpha そのものを盛らずに相対比で明滅させる。
-   下限 = pulse-min/pulse-max ≈ 0.035/0.11 ≈ 0.32、上限 = 1.0。
+   下限 opacity = pulse-min / pulse-max（既定 0.035/0.11 ≈ 0.32）、上限 = 1.0。
+   これによりテーマが --star-node-pulse-min/max を上書きすると明滅の下限/上限が
+   実際に変わる（THEME_GUIDE §2.7）。両トークン未定義のテーマは fallback で既定比。
    セレクタは .hero-star-nodes circle と同等以上の詳細度にして fill を確実に上書きする。 */
 .hero-star-nodes circle.hero-star-pulse {
-  fill: rgba(200, 69, 46, 0.11); /* --star-node-pulse-max 相当（tokens に集約済み） */
-  opacity: 0.32;                  /* 静止時（reduced-motion）の下限アルファ */
+  fill: var(--star-node-pulse); /* 上限アルファ（tokens に集約済み） */
+  /* 静止時（reduced-motion）の下限アルファ = min/max 比 */
+  opacity: calc(var(--star-node-pulse-min, 0.035) / var(--star-node-pulse-max, 0.11));
   animation: hero-star-twinkle 7.6s ease-in-out infinite;
   will-change: opacity;
 }
@@ -566,10 +795,11 @@ h2,
 @keyframes hero-star-twinkle {
   0%,
   100% {
-    opacity: 0.32; /* 下限（≈3.5%） */
+    /* 下限 = min/max 比（テーマの pulse-min/max を反映） */
+    opacity: calc(var(--star-node-pulse-min, 0.035) / var(--star-node-pulse-max, 0.11));
   }
   50% {
-    opacity: 1;    /* 上限（≈11%） */
+    opacity: 1;    /* 上限（fill の実アルファ = --star-node-pulse） */
   }
 }
 

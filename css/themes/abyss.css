@@ -1,0 +1,237 @@
+/* =============================================================
+   APT ATLAS — テーマ「深淵 / Abyss」
+   ID: abyss ／ 和名: 深淵 ／ EN: Abyss
+
+   世界観: 光の届かない洞窟・深海。全セクションが闇に沈み、
+   生物発光（bioluminescence）だけが手掛かりとなる。
+   明面（Paper 章）は「浅い深度」の深青黒、暗面（.vault）は
+   さらに沈んだ漆黒。明暗交互のリズムは「深さの階調」として残す。
+   アクセントは朱から生物発光シアン〜ターコイズへ。本文は燐光では
+   なく落ち着いた月白で長文可読性を最優先する（THEME_GUIDE §5）。
+
+   契約（THEME_GUIDE.md）:
+     - すべて html[data-theme="abyss"] スコープ配下（明面）／
+       html[data-theme="abyss"] .vault（暗面）の二層で上書き。
+     - 寸法・レイアウト・タイポ寸法は不変。色・質感・角丸・ぼかしのみ。
+     - 本文コントラスト 4.5:1 以上厳守（実測 14〜16:1／muted 6〜7:1）。
+     - 追加モーション（ambient 光の粒）は reduced-motion で停止。
+   ============================================================= */
+
+/* =============================================================
+   明面 = Paper 章（ヒーロー・intro 明面・explorer・モーダル・ナビ）
+   「浅い深度」= 深い青黒 #0B1016 級。全面をダークへ沈める。
+   ============================================================= */
+html[data-theme="abyss"] {
+
+  /* ---------- 地（明面＝浅い深度の深青黒 / 暗面＝最暗の漆黒） ----------
+     --vault は :root 側からも参照されるため、明面ブロックでも定義して
+     モーダルオーバーレイ幕（--overlay の元色）や .vault 追従の基準を揃える。 */
+  --paper: #0B1016;
+  --vault: #05070B;
+
+  /* ---------- インク & 階調（明面） ----------
+     本文＝月白（燐光にしない）。カード面は地から冷たい明度差で浮かせる。 */
+  --ink: #E7ECF3;               /* 月白：長文和文の可読性最優先 */
+  --ink-muted: #93A0B2;         /* 副次テキスト（冷たい鋼青灰・4.5:1 超） */
+  --line: #232E3D;              /* ヘアライン（深水の輪郭） */
+  --elevated: #111925;          /* カード面（浅瀬の岩肌） */
+  --elevated-hover: #16202E;    /* カード面ホバー（光が差す） */
+
+  /* ---------- アクセント（生物発光シアン〜ターコイズ） ----------
+     朱に代わる唯一のブランド色。図録番号・タブ・リンク・進捗バーが
+     燐光として灯る。文字用途でも 11:1 超を確保した濃度。 */
+  --accent: #3FE3D2;                        /* 燐光シアン */
+  --accent-deep: #22C7B7;                   /* 押下・ホバー深色（潜る） */
+  --accent-soft: rgba(63, 227, 210, 0.14);  /* 淡面（同色相・低アルファ） */
+  --accent-ring: rgba(63, 227, 210, 0.85);  /* フォーカスリング */
+  --accent-fg: #04140F;                      /* 燐光面の上に載る文字（深緑黒） */
+
+  /* ---------- 国別6色（燐光寄りに再調整） ----------
+     深地の上で相互に識別でき、彩度を上げて「灯る」。役割（どの国が
+     どの色か）は不変。component 側の box-shadow: var(--edge) が
+     この色で発光縁を作るため、彩度上げが自動で glow を強める。 */
+  --c-cn: #F0555A;   /* 中国   — 珊瑚朱の燐光 */
+  --c-ir: #37D7A6;   /* イラン — 深海緑の燐光 */
+  --c-kp: #5B9BFF;   /* 北朝鮮 — 冷光ブルー */
+  --c-ru: #B98BF0;   /* ロシア — 紫燐光 */
+  --c-vn: #F0B93E;   /* ベトナム — 琥珀の燐光 */
+  --c-un: #9FB0C4;   /* 未公表 — 鈍い燐光灰 */
+
+  /* ---------- 影（暗地：黒を弱め、僅かにシアン発光へ寄せる） ---------- */
+  --shadow-modal: 0 28px 90px rgba(0, 0, 0, 0.66),
+                  0 0 0 1px rgba(63, 227, 210, 0.05);
+  --shadow-plate-rest: 0 0 0 rgba(0, 0, 0, 0);
+  --shadow-plate-hover: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
+
+  /* ---------- ガラス・幕（暗地の半透明。ナビ下地が透ける） ---------- */
+  --glass-nav: rgba(11, 16, 22, 0.78);
+  --glass-blur: 16px;
+  --overlay: rgba(2, 4, 7, 0.7);
+  --overlay-blur: 9px;
+
+  /* ---------- テクスチャ・星図（気配レベルの燐光地紋） ----------
+     明面地紋は白の極微。ヒーロー星図の結線＝冷光の 3%、点＝燐光
+     シアンの 6%。深地でも「濃くしすぎない」気配レベルを守る。 */
+  --texture-ink: rgba(150, 190, 210, 0.035);
+  --star-line: rgba(120, 170, 195, 0.06);
+  --star-node: rgba(63, 227, 210, 0.09);
+  --star-node-pulse-min: 0.05;
+  --star-node-pulse-max: 0.20;
+  --star-node-pulse: rgba(63, 227, 210, 0.20);
+  /* マスクは不透明度の勾配のみ（地色非依存）。そのまま。 */
+
+  /* ---------- 選択（::selection）：燐光地に深緑黒の文字 ---------- */
+  --select-bg: var(--accent);
+  --select-fg: #04140F;
+}
+
+/* =============================================================
+   暗面 = .vault 章（intro 暗面・nations・network・footer）
+   「深い深度」= さらに沈んだ漆黒。ネットワーク図が最暗部で、
+   闇に星座（国色の燐光）が最も映えるチューニング。
+   ============================================================= */
+html[data-theme="abyss"] .vault {
+  --vault: #05070B;
+
+  --ink: #E4EAF2;               /* 月白（漆黒の上で沈まぬ白墨） */
+  --ink-muted: #8593A6;         /* 副次テキスト（6:1 超） */
+  --line: #161F2C;              /* ヘアライン（最暗の輪郭） */
+  --elevated: #0B1119;          /* カード面（深淵の段） */
+  --elevated-hover: #101826;    /* カード面ホバー */
+
+  /* 暗面の光の持ち上げ（ネットワーク器の下地）。
+     深海に差す一条の冷光。器の中心をごく僅かに燐光で満たす。 */
+  --texture-lift: rgba(70, 150, 175, 0.05);
+}
+
+/* =============================================================
+   ambient 演出 — ごく微かな「生物発光の粒」が漂う気配
+   CSS のみ・2〜3 点・超低速・低透過。テーマ接頭辞で自己完結し、
+   他テーマ・既定を汚さない。pointer-events 無効。
+   reduced-motion で完全停止（下部メディアクエリ）。
+   ============================================================= */
+
+/* ---- ヒーロー（明面）：星図の奥に漂う二粒の燐光 ----
+   .hero は position:relative。既存の .hero-star（星図）と .hero-inner の
+   間に、放射グラデの光点を疑似要素で忍ばせる。z-index 0（本文=1 の下）。 */
+html[data-theme="abyss"] .hero {
+  isolation: isolate;
+}
+html[data-theme="abyss"] .hero::before,
+html[data-theme="abyss"] .hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  /* 光の粒＝中心が燐光シアン、外へ透明に溶ける放射グラデ */
+  background: radial-gradient(circle,
+      rgba(63, 227, 210, 0.10) 0%,
+      rgba(63, 227, 210, 0.04) 34%,
+      transparent 70%);
+  will-change: transform, opacity;
+}
+html[data-theme="abyss"] .hero::before {
+  width: 340px;
+  height: 340px;
+  left: 8%;
+  top: 34%;
+  animation: abyss-drift-a 34s ease-in-out infinite;
+}
+html[data-theme="abyss"] .hero::after {
+  width: 240px;
+  height: 240px;
+  right: 22%;
+  bottom: 16%;
+  background: radial-gradient(circle,
+      rgba(90, 155, 255, 0.08) 0%,
+      rgba(90, 155, 255, 0.03) 36%,
+      transparent 72%);
+  animation: abyss-drift-b 46s ease-in-out infinite;
+}
+
+/* ---- ネットワーク器（暗面・最暗部の主役）：闇に漂う三粒 ----
+   .net-stage は position:relative; overflow:hidden。器内の最背面に
+   極めて低透過の燐光を漂わせ、星座（ノード）の背後に深海の気配を置く。
+   SVG（z-index 既定）より背面へ ::before を敷く。 */
+html[data-theme="abyss"] .net-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* 三粒の生物発光。器の中でゆっくり明滅（呼吸）する気配。 */
+  background:
+    radial-gradient(160px 160px at 26% 32%, rgba(63, 227, 210, 0.06), transparent 70%),
+    radial-gradient(190px 190px at 74% 66%, rgba(90, 155, 255, 0.05), transparent 72%),
+    radial-gradient(130px 130px at 58% 22%, rgba(55, 215, 166, 0.045), transparent 70%);
+  animation: abyss-breathe 28s ease-in-out infinite;
+  will-change: opacity;
+}
+/* SVG（network.js が挿入）を粒の前面へ確実に置く。 */
+html[data-theme="abyss"] .net-svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- カード hover で発光縁が強まる（気配の呼応） ----
+   明面の標本プレート・intro 特徴カードは既定では発光縁を持たないが、
+   Abyss では hover 時に国色/燐光の縁がごく僅かに灯る。既存の枠色変化に
+   薄い外光（box-shadow）を重ねるのみ。寸法・レイアウトは不変。 */
+html[data-theme="abyss"] .exp-plate:hover {
+  box-shadow:
+    var(--shadow-plate-hover),
+    0 0 22px -6px color-mix(in srgb, var(--edge) 40%, transparent);
+}
+html[data-theme="abyss"] .intro-trait:hover {
+  box-shadow: 0 0 20px -8px var(--accent-soft);
+}
+
+@keyframes abyss-drift-a {
+  0%, 100% { transform: translate(0, 0); opacity: 0.8; }
+  50%      { transform: translate(26px, -20px); opacity: 1; }
+}
+@keyframes abyss-drift-b {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50%      { transform: translate(-22px, 18px); opacity: 1; }
+}
+@keyframes abyss-breathe {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+
+/* =============================================================
+   ネットワーク図の主役チューニング（暗面・最暗部）
+   闇に星座が最も映えるよう、配線とラベルの視認性を僅かに引き上げる。
+   色・不透明度のみ（寸法・律動には触れない）。
+   ============================================================= */
+/* エッジ（配線）は最暗地では既定 0.2 だとやや沈むため、実線の帰属外
+   エッジをごく僅かに持ち上げる（燐光シアンではなく白墨のまま＝主張過多を避ける）。 */
+html[data-theme="abyss"] .net-edge.is-wired {
+  opacity: 0.26;
+}
+/* 朱→燐光へ置き換わった帰属/戦術エッジは、深地で確かに灯るよう +α。 */
+html[data-theme="abyss"] .net-edge[data-etype="attribution"].is-wired,
+html[data-theme="abyss"] .net-edge[data-etype="tactic"].is-wired {
+  opacity: 0.3;
+}
+
+/* =============================================================
+   reduced-motion — 追加した ambient / hover glow のモーションを停止
+   （気配＝静止した最終状態で残す。色・発光は「状態」なので維持）。
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="abyss"] .hero::before,
+  html[data-theme="abyss"] .hero::after,
+  html[data-theme="abyss"] .net-stage::before {
+    animation: none !important;
+  }
+  html[data-theme="abyss"] .hero::before,
+  html[data-theme="abyss"] .hero::after {
+    opacity: 0.85;
+    transform: none !important;
+  }
+  html[data-theme="abyss"] .net-stage::before {
+    opacity: 0.85;
+  }
+}
