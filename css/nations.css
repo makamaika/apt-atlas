@@ -143,6 +143,8 @@
   inset-block: 0;
   inset-inline-start: 0;
   width: 0;
+  /* 極小値(2.6%等)でもピルが潰れて細く見えないよう、トラック高と同じ最小幅を保証する */
+  min-width: 10px;
   border-radius: var(--radius-pill);
   background: var(--edge);
   /* バー伸長：SPEC のイージングで 900ms。数値カウントアップ（nations.js）と同期。 */
@@ -195,8 +197,13 @@
   text-align: right;
   white-space: nowrap;
 }
+/* 件数・% を行間で桁揃えし、ラベル列の幅を全行で一定にする。
+   幅が揃うことで 1fr のトラック長も全行で等しくなる（右端のガタつき防止）。 */
 .nat-bar-count b {
   font-weight: var(--fw-semibold);
+  display: inline-block;
+  min-width: 2ch;
+  text-align: right;
 }
 .nat-bar-pct {
   /* % は件数に従属する補足。階調を一段落として控えめに（読みの主役は「N 組織」）。 */
@@ -206,6 +213,9 @@
   letter-spacing: 0.01em;
   margin-inline-start: 0.5em;
   font-variant-numeric: tabular-nums;
+  display: inline-block;
+  min-width: 5ch;
+  text-align: right;
 }
 
 /* 最大勢力（中国）を細い朱下線で静かに強調 */
