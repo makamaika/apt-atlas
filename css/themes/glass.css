@@ -241,7 +241,13 @@ html[data-theme="glass"] .vault .nat-card,
 html[data-theme="glass"] .vault .intro-purpose,
 html[data-theme="glass"] .vault .net-hl,
 html[data-theme="glass"] .vault .net-key,
-html[data-theme="glass"] .vault .net-tip {
+html[data-theme="glass"] .vault .net-tip,
+/* 別館（.ax.vault）の静的な大面も同じスモークガラス光学系で扱う。
+   annex は全て .vault 配下＝暗面トークンを参照するため、暗面規則に含める。
+   .ax-why / .ax-panel はホバーで box-shadow を変えない静的面なので
+   この inset のみのブロックで扱える。 */
+html[data-theme="glass"] .vault .ax-why,
+html[data-theme="glass"] .vault .ax-panel {
   -webkit-backdrop-filter: blur(16px) saturate(1.3);
           backdrop-filter: blur(16px) saturate(1.3);
   box-shadow:
@@ -249,11 +255,55 @@ html[data-theme="glass"] .vault .net-tip {
     inset 0 0 0 1px rgba(180, 205, 240, 0.05);
 }
 
+/* 別館の標本プレート（.ax-card）と関連図録ボタン（.ax-relcard）は、
+   本館の .exp-plate と同じく rest/hover で --shadow-plate-* を切り替える。
+   frost の鏡面ハイライトとプレート影を両立させる（inset のみだと
+   ホバー時の浮き上がり影が上書きで消えてしまうため、rest/hover を分けて記述）。 */
+html[data-theme="glass"] .vault .ax-card,
+html[data-theme="glass"] .vault .ax-relcard {
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+}
+html[data-theme="glass"] .vault .ax-card {
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.16),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.05),
+    var(--shadow-plate-rest);
+}
+html[data-theme="glass"] .vault .ax-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.24),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.08),
+    var(--shadow-plate-hover);
+}
+html[data-theme="glass"] .vault .ax-relcard {
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.16),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.05);
+}
+html[data-theme="glass"] .vault .ax-relcard:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 250, 0.24),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.08),
+    var(--shadow-plate-hover);
+}
+
 /* net-tip / モーダルは元から shadow-modal を持つので鏡面と両立させる。 */
 html[data-theme="glass"] .vault .net-tip {
   box-shadow:
     var(--shadow-modal),
     inset 0 1px 0 rgba(210, 226, 250, 0.18);
+}
+
+/* 別館モーダル（.ax-modal）＝ Vault 配下の大面。本館 .exp-modal と同格に
+   frost の blur と鏡面ハイライトを与え、元の --shadow-modal と両立させる。 */
+html[data-theme="glass"] .vault .ax-modal {
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+          backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    var(--shadow-modal),
+    inset 0 1px 0 rgba(210, 226, 250, 0.20),
+    inset 0 0 0 1px rgba(180, 205, 240, 0.06);
 }
 
 /* ネットワーク図の器：スモークガラスの奥に星が灯る。
@@ -292,7 +342,12 @@ html[data-theme="glass"] .badge {
 }
 html[data-theme="glass"] .vault .chip,
 html[data-theme="glass"] .vault .exp-chip-tag,
-html[data-theme="glass"] .vault .nat-nexus-tag {
+html[data-theme="glass"] .vault .nat-nexus-tag,
+/* 別館の小面（チップ・目的タグ・昇格フローの語）も同じ淡い透けで軽く扱う。
+   昇格の到達点 .ax-flow-goal は朱で点灯させる意匠なので除外し、accent 地を保つ。 */
+html[data-theme="glass"] .vault .ax-chip-tag,
+html[data-theme="glass"] .vault .ax-purpose-tag,
+html[data-theme="glass"] .vault .ax-flow-step:not(.ax-flow-goal) {
   background: rgba(210, 226, 250, 0.06);
 }
 
@@ -342,5 +397,51 @@ html[data-theme="glass"] .vault .nat-nexus-tag {
   html[data-theme="glass"] .vault .intro-purpose,
   html[data-theme="glass"] .vault .net-hl {
     transition: none;
+  }
+}
+
+/* =============================================================
+   8. 別館（ANNEX）向け追記 — 新設3色と別館の地
+   別館 <section class="ax vault"> は全面 Vault（スモークガラス）。
+   カード／パネル／モーダルの硝子光学は §5〜6 で付与済み。ここでは
+   (a) 新設の国・分類3色（IN / US / CR）を硝子の二層光学系へ調整し、
+   (b) 別館の地に他の Vault 章と同じオーロラの滲みを敷く。
+   ============================================================= */
+
+/* ---- (a) 新設3色：明面（フロスト硝子の上の沈んだ顔料 / 各 ≥4.1:1） ---- */
+html[data-theme="glass"] {
+  --c-in: #A2611E;   /* インド — 琥珀銅（vs paper 4.19:1。--c-vn の黄土と色相で分離） */
+  --c-us: #3F6E9C;   /* 米国 — 鋼青（vs paper 4.56:1。--c-kp #3E63B8 より灰青に寄せ分離） */
+  --c-cr: #6B695F;   /* 犯罪組織 — 暖石灰（vs paper 4.69:1。--c-un の冷青灰と温度で分離） */
+}
+
+/* ---- (a') 新設3色：暗面（スモークガラスの奥で灯る明度 / 各 ≥6:1 on vault） ---- */
+html[data-theme="glass"] .vault {
+  --c-in: #CE8B4A;   /* インド — 銅の灯（6.68:1） */
+  --c-us: #7FA9CC;   /* 米国 — 鋼青の灯（7.61:1。--c-kp #5C82D6 の菫青と分離） */
+  --c-cr: #A6A099;   /* 犯罪組織 — 暖石の灯（7.31:1。--c-un #8894A6 の冷青灰と分離） */
+}
+
+/* ---- (b) 別館の地：スモークガラスの奥にオーロラを僅かに滲ませる
+   （§3 の .intro-vault / .nat / .net / .foot と同じ光学系・同レベルの気配） ---- */
+html[data-theme="glass"] .ax {
+  background-color: var(--vault);
+  background-image:
+    radial-gradient(120% 88% at 12% 0%, rgba(70, 96, 150, 0.20), transparent 56%),
+    radial-gradient(120% 92% at 90% 100%, rgba(96, 74, 140, 0.16), transparent 58%);
+}
+
+/* ---- (c) 性能フォールバック（§6.5 と同方針）：狭幅では多数生成される
+   別館の面（カード15枚・パネル・関連図録）から blur を外し、
+   面の不透明度を上げて質感と本文コントラストを保つ。
+   モーダル（.ax-modal＝単一の大面）は blur を残す。 ---- */
+@media (max-width: 720px) {
+  html[data-theme="glass"] .vault .ax-why,
+  html[data-theme="glass"] .vault .ax-panel,
+  html[data-theme="glass"] .vault .ax-card,
+  html[data-theme="glass"] .vault .ax-relcard {
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    background-color: rgba(24, 32, 45, 0.92);
   }
 }

@@ -221,3 +221,34 @@ html[data-theme="terminal"] .foot-brand-mark::before {
     opacity: 1;
   }
 }
+
+/* =============================================================
+   8. 別館（ANNEX）向け追記 — 新設3色の端末パレット再マップと管制室の意匠
+   別館 <section class="ax vault"> は管制室の予備コンソール。
+   走査線は §3 の `html[data-theme="terminal"] .vault` が .ax.vault にも
+   そのまま乗る（追加不要）。ここでは新設3色の再マップと、見出し／
+   無番の登録印へのフォスファー残光のみ足す。追加モーションなし。
+   ============================================================= */
+
+/* ---- 新設3色（端末パレットの残余色へ再マップ / 既存6色と同ブロック方式） ----
+   IN=copper（赤銅。CN の琥珀と黄/赤で分離）／ US=blue（青。KP の cyan と分離）／
+   CR=cool gray（青灰の減光。UN の緑灰と温度で分離）。
+   コントラスト実測: IN 6.3〜6.7:1 / US 6.9〜7.4:1 / CR 7.1〜7.6:1
+   （on paper #0B140F・vault #050A07・カード面）。 */
+html[data-theme="terminal"] {
+  --c-in: #DD7B52;   /* インド   copper */
+  --c-us: #6FA0E0;   /* 米国     blue   */
+  --c-cr: #96A1AB;   /* 犯罪組織 gray   */
+}
+
+/* ---- 別館章題にも見出しの極微グロー（§4 と同値の残光） ---- */
+html[data-theme="terminal"] .ax-title {
+  text-shadow: 0 0 18px rgba(79, 224, 126, 0.12);
+}
+
+/* ---- 無番の登録印（イニシャル暗号・章番号・モーダル銘）へ LED 残光（§4 と同値） ---- */
+html[data-theme="terminal"] .ax-plate-no,
+html[data-theme="terminal"] .ax-card-cipher,
+html[data-theme="terminal"] .ax-modal-cipher {
+  text-shadow: 0 0 10px rgba(79, 224, 126, 0.16);
+}

@@ -235,3 +235,50 @@ html[data-theme="abyss"] .net-edge[data-etype="tactic"].is-wired {
     opacity: 0.85;
   }
 }
+
+/* =============================================================
+   別館（ANNEX）向け追記 — 新設3色（燐光トーン）と燐光の呼応
+   別館 <section class="ax vault"> は深淵の最下層に増築された無番の書庫。
+   既存6色と同じ「燐光」文法で IN / US / CR を灯し、無番カードには
+   本館 .exp-plate と同じ hover 発光縁の呼応を与える。追加モーションなし
+   （静止した気配のみ。hover の遷移は annex.css の既存 transition が担い、
+   reduced-motion では annex.css 側が全て即時化する）。
+   ============================================================= */
+
+/* ---- 新設3色：既存6色と同じく明面ブロックで一括定義（.vault へ継承） ----
+   コントラスト実測: IN 7.2〜7.6:1 / US 8.1〜8.6:1 / CR 7.5〜8.0:1
+   （on paper #0B1016・vault #05070B・両カード面）。
+   US は --c-kp #5B9BFF（冷光ブルー）と彩度・色相で分離した鋼青、
+   CR は --c-un #9FB0C4（冷青灰）と温度で分離した暖石の燐光。 */
+html[data-theme="abyss"] {
+  --c-in: #E08A4E;   /* インド — 銅の燐光 */
+  --c-us: #85AECE;   /* 米国 — 鋼青の燐光 */
+  --c-cr: #A8A29A;   /* 犯罪組織 — 鈍い石の燐光 */
+}
+
+/* ---- 別館の地：深淵に静止する微かな燐光の粒（気配レベル・無動） ---- */
+html[data-theme="abyss"] .ax {
+  background:
+    radial-gradient(200px 200px at 84% 10%, rgba(63, 227, 210, 0.045), transparent 70%),
+    radial-gradient(240px 240px at 10% 74%, rgba(90, 155, 255, 0.04), transparent 72%),
+    var(--vault);
+}
+
+/* ---- 無番カード hover：国色の発光縁がごく僅かに灯る（.exp-plate と同作法） ---- */
+html[data-theme="abyss"] .ax-card:hover {
+  box-shadow:
+    var(--shadow-plate-hover),
+    0 0 22px -6px color-mix(in srgb, var(--edge) 40%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  html[data-theme="abyss"] .ax-card:hover {
+    box-shadow: var(--shadow-plate-hover);
+  }
+}
+
+/* ---- 関連図録ボタン hover：燐光（accent）の淡い外光で呼応 ---- */
+html[data-theme="abyss"] .ax-relcard:hover {
+  box-shadow:
+    var(--shadow-plate-hover),
+    0 0 18px -8px var(--accent-soft);
+}

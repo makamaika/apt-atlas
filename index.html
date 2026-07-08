@@ -49,6 +49,7 @@
   <link rel="stylesheet" href="css/nations.css">
   <link rel="stylesheet" href="css/network.css">
   <link rel="stylesheet" href="css/explorer.css">
+  <link rel="stylesheet" href="css/annex.css">
 </head>
 <body>
 
@@ -74,6 +75,7 @@
         <a class="nav-link" href="#nations">国家・地域</a>
         <a class="nav-link" href="#network">関係ネットワーク</a>
         <a class="nav-link" href="#explorer">全グループ</a>
+        <a class="nav-link" href="#annex">別館</a>
       </div>
 
       <!-- テーマ切替：現テーマのスウォッチ小円＋ラベル。クリックでポップオーバー。
@@ -260,7 +262,7 @@
             <span class="intro-eyebrow-ja">解説</span>
             <span class="intro-eyebrow-en">WHAT IS AN APT</span>
           </p>
-          <p class="intro-plate-no" data-reveal style="--reveal-delay:60ms">NO.&nbsp;02&nbsp;/&nbsp;06</p>
+          <p class="intro-plate-no" data-reveal style="--reveal-delay:60ms">NO. 02 ／ 07</p>
           <h2 id="intro-title" class="intro-title" data-reveal style="--reveal-delay:90ms">
             APT とは何か
           </h2>
@@ -457,7 +459,7 @@
         <header class="nat-head">
           <div class="nat-head-meta" data-reveal>
             <span class="nat-eyebrow label">第 III 室 ／ WING III</span>
-            <span class="nat-plate plate-no">NO. 03 ／ 06</span>
+            <span class="nat-plate plate-no">NO. 03 ／ 07</span>
           </div>
           <h2 id="nat-title" class="nat-title" data-reveal style="--reveal-delay:70ms">国家・地域分析</h2>
           <p class="nat-lede" data-reveal style="--reveal-delay:140ms">
@@ -507,7 +509,7 @@
             <span class="net-eyebrow-tab" aria-hidden="true"></span>
             第 IV 室 ／ WING IV — CONSTELLATION
           </p>
-          <p class="net-plate plate-no">NO. 04 / 06</p>
+          <p class="net-plate plate-no">NO. 04 ／ 07</p>
           <h2 id="net-title" class="net-title">関係ネットワーク図</h2>
           <p class="net-lede">
             APTは孤立していない — マルウェアと帰属で繋がるエコシステム。
@@ -561,9 +563,10 @@
               <h3 class="net-hl-title">APT38 × APT45 — 北朝鮮の金銭部隊</h3>
               <p class="net-hl-body">
                 <span class="net-mono">APT38</span> と <span class="net-mono">APT45</span> は
-                北朝鮮偵察総局（RGB）／Lazarus とリソースを共有すると評価される。
-                <span class="net-mono">APT37</span> を加えた<strong>3グループ</strong>が
-                スパイと外貨獲得という二重使命を担う一群を形づくる。
+                いずれも Lab 110（Lazarus 系）に連なり、北朝鮮偵察総局（RGB）と
+                リソースを共有すると評価される。別系統とされる
+                <span class="net-mono">APT37</span>（ScarCruft）を含め、
+                北朝鮮系グループには諜報と外貨獲得の両面で活動する例が複数確認されている。
               </p>
               <p class="net-hl-foot">結節点 <span class="net-mono">APT38</span> を中心に見る →</p>
             </article>
@@ -605,7 +608,7 @@
             <span class="exp-eyebrow-tab" aria-hidden="true"></span>
             <span class="exp-eyebrow-label">第 V 室 ／ WING V</span>
           </p>
-          <p class="exp-plate-no">NO. 05 / 06</p>
+          <p class="exp-plate-no">NO. 05 ／ 07</p>
           <h2 id="exp-title" class="exp-title">全グループ探索</h2>
           <p class="exp-lede">
             収録された全 39 組織を、名称・別名・マルウェア名で検索し、国家・地域と活動目的で絞り込める。
@@ -688,6 +691,159 @@
       </div>
     </section>
 
+    <!-- =========================================================
+         ANNEX / 別館 — 暗 / Vault。番号なき者たち。
+         本館（全39組織）の系譜の外側にある、番号を持たないグループ群。
+         命名体系の展示 ＋ 無番カタログ ＋ 専用モーダル（js/annex.js）。
+         ========================================================= -->
+    <section id="annex" class="ax vault" aria-labelledby="ax-title">
+      <div class="wrap ax-wrap">
+
+        <!-- ── 章見出し ── -->
+        <header class="ax-head">
+          <p class="ax-eyebrow" data-reveal>
+            <span class="ax-eyebrow-tab" aria-hidden="true"></span>
+            <span class="ax-eyebrow-ja">別館</span>
+            <span class="ax-eyebrow-en en">ANNEX — THE UNNUMBERED</span>
+          </p>
+          <p class="ax-plate-no plate-no" data-reveal style="--reveal-delay:60ms">NO. 06 ／ 07</p>
+          <h2 id="ax-title" class="ax-title" data-reveal style="--reveal-delay:90ms">
+            番号なき者たち
+          </h2>
+          <p class="ax-lede" data-reveal style="--reveal-delay:140ms">
+            本館に並ぶ三十九の図録番号は、Mandiant という一社の分析系譜が確定させた登録印にすぎない。
+            その外側には、番号を持たないまま各社の暗号名で追跡される者たちがいる。命名は帰属追跡の系譜であり、
+            誰がどう名づけるかに、その組織をめぐる確度と思想が刻まれている。
+          </p>
+        </header>
+
+        <!-- ── 命名体系の展示（美術館の解説パネル） ── -->
+        <div class="ax-taxonomy" aria-labelledby="ax-tax-title">
+          <div class="ax-tax-head" data-reveal>
+            <span class="ax-sub-eyebrow label">NOMENCLATURE ／ 命名体系</span>
+            <h3 id="ax-tax-title" class="ax-tax-title">名づけの四つの流儀</h3>
+          </div>
+
+          <!-- なぜ番号がないのか（リード解説パネル） -->
+          <div class="ax-why" data-reveal aria-labelledby="ax-why-title">
+            <p class="ax-why-label" id="ax-why-title">
+              <span class="ax-why-mark" aria-hidden="true">＃</span>
+              <span>なぜ「番号のないAPT」が存在するのか</span>
+            </p>
+            <p class="ax-why-body">
+              脅威インテリジェンス業界に単一の命名主体は存在しない。各ベンダーが独自の収集経路・確度評価・命名思想でグループを追跡するため、
+              APT 番号は業界横断の識別子ではなく Mandiant の分析パイプラインにおける「最終確定ラベル」に過ぎない。
+              多くの活動は未分類（UNC）や暫定名（TEMP）の段階に留まったまま公表され、あるいは他社独自の暗号名で先に知られる。
+              Microsoft や CrowdStrike はそもそも数字体系を採らず、名称そのものに帰属国や動機を織り込む設計を選んでいる。
+            </p>
+          </div>
+
+          <!-- 4系列の解説パネル群（グリッド） -->
+          <div class="ax-panels" role="list">
+
+            <!-- Mandiant 4系列 -->
+            <article class="ax-panel ax-panel-wide" role="listitem" data-reveal>
+              <div class="ax-panel-top">
+                <span class="ax-panel-vendor label">Mandiant ／ Google Threat Intelligence</span>
+                <h4 class="ax-panel-name">四つの接頭辞と昇格の階梯</h4>
+              </div>
+              <ul class="ax-series" role="list">
+                <li class="ax-series-row">
+                  <span class="ax-series-key">APT<span class="ax-series-x">nn</span></span>
+                  <span class="ax-series-desc">国家関与が高確度で評価された攻撃グループ</span>
+                </li>
+                <li class="ax-series-row">
+                  <span class="ax-series-key">FIN<span class="ax-series-x">nn</span></span>
+                  <span class="ax-series-desc">金銭目的の犯罪グループ</span>
+                </li>
+                <li class="ax-series-row">
+                  <span class="ax-series-key">UNC<span class="ax-series-x">nnnn</span></span>
+                  <span class="ax-series-desc">未分類（Uncategorized）。単一インシデントで観測された侵入クラスタの受け皿</span>
+                </li>
+                <li class="ax-series-row">
+                  <span class="ax-series-key">TEMP<span class="ax-series-x">.name</span></span>
+                  <span class="ax-series-desc">複数の UNC が収斂しつつある段階の暫定的な作業名</span>
+                </li>
+              </ul>
+              <p class="ax-series-flow">
+                <span class="ax-flow-step">UNC</span>
+                <span class="ax-flow-arrow" aria-hidden="true">→</span>
+                <span class="ax-flow-step">TEMP</span>
+                <span class="ax-flow-arrow" aria-hidden="true">→</span>
+                <span class="ax-flow-step ax-flow-goal">APT ／ FIN</span>
+                <span class="ax-flow-note">確度が十分高まった時のみ昇格</span>
+              </p>
+            </article>
+
+            <!-- CrowdStrike 動物サフィックス -->
+            <article class="ax-panel" role="listitem" data-reveal style="--reveal-delay:70ms">
+              <div class="ax-panel-top">
+                <span class="ax-panel-vendor label">CrowdStrike</span>
+                <h4 class="ax-panel-name">国別の象徴動物</h4>
+              </div>
+              <p class="ax-panel-note">
+                2部構成の暗号名。2語目が出身国または動機を示す。国家系は象徴動物、犯罪系は Spider、ハクティビストは Jackal。
+                Bear・Panda・Chollima・Kitten 等の主要な対応は公式資料で確認できるが、一部の国別対応は二次資料に基づくものを含む。
+              </p>
+              <dl class="ax-lex" data-ax-cs><!-- annex.js が suffixes から生成 --></dl>
+            </article>
+
+            <!-- Microsoft 気象ファミリー -->
+            <article class="ax-panel" role="listitem" data-reveal style="--reveal-delay:140ms">
+              <div class="ax-panel-top">
+                <span class="ax-panel-vendor label">Microsoft</span>
+                <h4 class="ax-panel-name">気象のファミリー名</h4>
+              </div>
+              <p class="ax-panel-note">
+                2023 年に気象現象テーマへ刷新。帰属国ごとにファミリー名を持ち、同一ファミリー内は形容詞で個別グループを区別する。
+              </p>
+              <dl class="ax-lex" data-ax-ms><!-- annex.js が families から生成 --></dl>
+            </article>
+
+            <!-- 同一グループ多名の実例 -->
+            <article class="ax-panel ax-panel-wide" role="listitem" data-reveal style="--reveal-delay:120ms">
+              <div class="ax-panel-top">
+                <span class="ax-panel-vendor label">Cross-Vendor ／ 同一グループ多名の実例</span>
+                <h4 class="ax-panel-name">一つの影に、いくつもの名</h4>
+              </div>
+              <ul class="ax-cross" data-ax-cross role="list"><!-- annex.js が crossExamples から生成 --></ul>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ── カタログ（無番の標本プレート群） ── -->
+        <div class="ax-catalog" aria-labelledby="ax-catalog-title">
+          <div class="ax-catalog-head" data-reveal>
+            <span class="ax-sub-eyebrow label">CATALOGUE ／ 無番の図録</span>
+            <h3 id="ax-catalog-title" class="ax-catalog-title">番号を持たない者たちの標本</h3>
+            <p class="ax-catalog-lede">
+              図録番号の代わりにコードネームと MITRE ID を掲げる、
+              <span class="ax-catalog-n" data-ax-count>15</span> 件の無番標本。
+              各プレートをひらけば、ベンダーごとの呼称・代表的な事件・本館の関連図録まで辿れる。
+            </p>
+          </div>
+          <!-- カードは annex.js が APT_ANNEX.groups から動的生成 -->
+          <div class="ax-grid" data-ax-grid role="list" aria-label="番号なきグループ一覧"><!-- JS生成 --></div>
+        </div>
+
+      </div>
+
+      <!-- ── 詳細モーダル（別館専用・本館と同じ視覚言語） ── -->
+      <div class="ax-modal-root" id="ax-modal-root" hidden>
+        <div class="ax-overlay" id="ax-overlay" tabindex="-1"></div>
+        <div
+          class="ax-modal"
+          id="ax-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ax-modal-title"
+        >
+          <div class="ax-modal-inner" id="ax-modal-inner"><!-- annex.js が生成 --></div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- =========================================================
@@ -727,15 +883,18 @@
 
   <!-- =========================================================
        スクリプト（末尾読込・順序厳守）
-       data.js → relations.js → main.js → nations.js → network.js → explorer.js
+       data.js → relations.js → annex.js → js/theme.js → js/main.js
+       → js/nations.js → js/network.js → js/explorer.js → js/annex.js
        ========================================================= -->
   <script src="data.js"></script>
   <script src="relations.js"></script>
+  <script src="annex.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/main.js"></script>
   <script src="js/nations.js"></script>
   <script src="js/network.js"></script>
   <script src="js/explorer.js"></script>
+  <script src="js/annex.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,1179 @@
+/* =============================================================
+   APT ATLAS — 別館 / ANNEX（番号なき者たち）
+   担当プレフィックス: ax-
+   色・サイズは必ず tokens.css の CSS変数を参照する（生HEX禁止）。
+
+   このセクションは暗面（Vault）＝別館の趣。<section class="ax vault"> が
+   tokens.css の .vault で地とインクを上書きするため、コンポーネントは
+   明面と同じ変数名（--ink / --line / --elevated …）を参照して描画される。
+   モーダル（.ax-modal 系）の造形は explorer.css（.exp-modal 系）を参考に、
+   本館と同質の視覚言語で組む。ただしパネルは Vault 地の上に置く。
+   ============================================================= */
+
+.ax {
+  /* .vault クラスが地（--vault）とインク（白墨）を供給する */
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--line);
+}
+
+/* wrap は共通ユーティリティだが、未定義環境でも成立するよう保険定義 */
+.ax .wrap {
+  width: 100%;
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* =============================================================
+   1. 章見出し（本館の意匠：朱タブ＋英字アイブロウ＋図録番号＋章題）
+   ============================================================= */
+.ax-head {
+  max-width: 60ch;
+}
+
+.ax-eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-4);
+}
+.ax-eyebrow-tab {
+  display: inline-block;
+  width: 26px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+.ax-eyebrow-ja {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+  line-height: var(--lh-tight);
+}
+.ax-eyebrow-en {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+
+.ax-plate-no {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ax-title {
+  margin: 0 0 var(--sp-5);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-h1);
+  line-height: var(--lh-h1);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.ax-lede {
+  margin: 0;
+  max-width: var(--reading);
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+/* 副見出し（サブセクションのアイブロウ／章題） */
+.ax-sub-eyebrow {
+  display: inline-block;
+  color: var(--accent);
+}
+.ax-sub-eyebrow.label { color: var(--accent); }
+
+.ax-tax-head,
+.ax-catalog-head {
+  margin-top: clamp(56px, 8vw, 104px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.ax-tax-title,
+.ax-catalog-title {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+  text-wrap: balance;
+}
+.ax-catalog-lede {
+  margin: var(--sp-2) 0 0;
+  max-width: var(--reading);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+.ax-catalog-n {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+/* =============================================================
+   2. 命名体系の展示 — 解説パネル群
+   ============================================================= */
+
+/* なぜ番号がないのか（左に朱罫の解説パネル。本館 intro-naming の作法） */
+.ax-why {
+  margin-top: var(--stack-l);
+  padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 30px);
+  padding-inline-start: clamp(24px, 3vw, 34px);
+  position: relative;
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+/* 左端 2px の朱罫（見出し朱） */
+.ax-why::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--accent);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+}
+.ax-why-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink);
+}
+.ax-why-mark {
+  color: var(--accent);
+  font-weight: var(--fw-semibold);
+}
+.ax-why-body {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+/* パネル・グリッド（美術館の解説パネル：グリッド＋ラベル＋ヘアライン） */
+.ax-panels {
+  margin-top: var(--stack-l);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+/* 横長パネル（Mandiant 4系列・多名の実例）は2カラムぶち抜き */
+.ax-panel-wide { grid-column: 1 / -1; }
+
+.ax-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--card-pad);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+/* パネル上端の朱ヘアライン（図録の見出し朱・静的な短い印） */
+.ax-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.ax-panel-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.ax-panel-vendor {
+  color: var(--ink-muted);
+}
+.ax-panel-name {
+  margin: 0;
+  font-size: var(--fs-body-l);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: 1.3;
+  color: var(--ink);
+}
+.ax-panel-note {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: 1.8;
+  color: var(--ink-muted);
+  max-width: 52ch;
+}
+
+/* ── Mandiant 4系列（キー＋説明の積み重ね） ── */
+.ax-series {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.ax-series-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.32fr) 1fr;
+  gap: var(--sp-4);
+  align-items: baseline;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ax-series-key {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ax-series-x {
+  color: var(--ink-muted);
+  font-weight: var(--fw-body);
+  letter-spacing: 0.04em;
+}
+.ax-series-desc {
+  font-size: var(--fs-body-s);
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+/* 昇格の階梯（UNC → TEMP → APT/FIN） */
+.ax-series-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin: var(--sp-2) 0 0;
+}
+.ax-flow-step {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  /* 別館は Vault（暗面）。ピルは明面地色（--paper）ではなくカード面
+     （--elevated-hover：パネル地 --elevated から一段持ち上げた面）に載せる。
+     --paper を暗面で使うと地との明暗が反転し、地に浮く白ピル＋低コントラスト
+     文字になる（全テーマで本文 3:1 未満に破綻していた）。 */
+  background: var(--elevated-hover);
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+/* 昇格の到達点（APT／FIN）は朱で点灯させる。朱地＋前景色（--accent-fg）は
+   各テーマがコントラスト保証（4.5:1 以上）する対で、暗地でも確実に読める。
+   淡ピル＋朱字（実効 3.5:1 前後）だとテーマにより本文級コントラストを割るため。 */
+.ax-flow-goal {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.ax-flow-arrow {
+  color: var(--accent);
+  font-size: var(--fs-body);
+}
+.ax-flow-note {
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── 用語表（CrowdStrike 動物 ／ Microsoft 気象）＝定義リスト ── */
+.ax-lex {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--sp-5);
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.ax-lex-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.ax-lex-term {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ax-lex-country {
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  text-align: end;
+  line-height: 1.4;
+  min-width: 0;
+}
+
+/* ── 同一グループ多名の実例 ── */
+.ax-cross {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  margin: 0;
+  padding: 0;
+}
+.ax-cross-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.ax-cross-canon {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.ax-cross-canon::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+  transform: translateY(-0.28em);
+}
+.ax-cross-names {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: 1.9;
+  color: var(--ink-muted);
+  word-break: break-word;
+}
+
+/* =============================================================
+   3. カタログ — 無番の標本プレート（.ax-card）
+   本館の標本プレートと同族。ただし「図録番号」の代わりに
+   コードネームの英字イニシャル＋ MITRE ID を掲げる無番の意匠。
+   ============================================================= */
+.ax-grid {
+  margin-top: clamp(28px, 4vw, 44px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--grid-gap);
+}
+
+.ax-card {
+  --edge: var(--c-un);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-plate-rest);
+  transition: transform var(--dur-hover) var(--ease),
+              background-color var(--dur-hover) var(--ease),
+              border-color var(--dur-hover) var(--ease),
+              box-shadow var(--dur-hover) var(--ease);
+}
+
+/* 上端の朱ヘアライン（左→右へ伸びる見出し朱）。常時は伏せ、hover/focus で伸長。 */
+.ax-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-hover) var(--ease);
+  z-index: 1;
+  pointer-events: none;
+}
+.ax-card:hover::before,
+.ax-card:has(.ax-card-inner:focus-visible)::before {
+  transform: scaleX(1);
+}
+
+/* 右上角の「無番」印：朱の縦フラグではなく、破線の縦罫にして
+   「番号なし」を造形で示す（本館の実線フラグとの対比）。 */
+.ax-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 14px;
+  width: 2px;
+  height: 34px;
+  background: linear-gradient(
+    var(--accent) 0 40%,
+    transparent 40% 60%,
+    var(--accent) 60% 100%
+  );
+  opacity: 0.8;
+}
+
+.ax-card:hover {
+  transform: translateY(-4px);
+  background: var(--elevated-hover);
+  border-color: color-mix(in srgb, var(--edge) 40%, var(--line));
+  box-shadow: var(--shadow-plate-hover);
+}
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  .ax-card:hover { border-color: var(--edge); }
+}
+
+/* フォーカスはカード全体に朱アウトライン（本館の作法に倣う）。 */
+.ax-card:focus-within {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+@supports selector(:has(*)) {
+  .ax-card:focus-within { outline: none; }
+  .ax-card:has(.ax-card-inner:focus-visible) {
+    outline: var(--focus-width) solid var(--accent);
+    outline-offset: var(--focus-offset);
+  }
+}
+.ax-card-inner:focus { outline: none; }
+.ax-card-inner:focus-visible { outline: none; }
+
+/* 出現スタッガー（本館 exp-plate-in と同質の立ち上がり） */
+@keyframes ax-card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.ax-card.ax-hold { opacity: 0; }
+.ax-card.ax-in {
+  opacity: 0;
+  animation: ax-card-in var(--dur-plate-in) var(--ease) both;
+  animation-delay: calc(var(--ax-i, 0) * var(--stagger-plate));
+}
+
+/* ── カード上段 ── */
+.ax-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+.ax-card-idx {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ax-card-tab {
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+  transition: width var(--dur-hover) var(--ease);
+}
+.ax-card:hover .ax-card-tab { width: 30px; }
+
+/* 図録番号の代わり：コードネームのイニシャル＋MITRE ID（無番の登録印） */
+.ax-card-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.ax-card-cipher {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+.ax-card-mitre {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 国バッジ（インライン .nation 相当） */
+.ax-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  white-space: nowrap;
+  flex: none;
+}
+.ax-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--edge);
+  flex: none;
+}
+/* 暗面の signal edge：ドットに微光を添える（別館は Vault なので許可）。 */
+.ax-card .ax-dot {
+  box-shadow: 0 0 8px 0 color-mix(in srgb, var(--edge) 60%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  .ax-card .ax-dot { box-shadow: none; }
+}
+
+/* ── 名称（英字コードネーム＋和名） ── */
+.ax-card-name {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: var(--lh-h2);
+  color: var(--ink);
+}
+.ax-card-ja {
+  margin: 6px 0 0;
+  font-size: var(--fs-body-s);
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+/* ── フック（一文の惹句） ── */
+.ax-card-hook {
+  margin: var(--sp-4) 0 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+/* ── 本文帯（ベンダー呼称の抜粋＋マルウェアチップ） ── */
+.ax-card-body {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.ax-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.ax-field-label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.ax-field-label .en { text-transform: uppercase; }
+
+.ax-vendors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.ax-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* チップ（マルウェア／ベンダー呼称） */
+.ax-chip-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--elevated);
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  line-height: 1.4;
+}
+.ax-chip-tag.is-mal {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.ax-chip-more {
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  align-self: center;
+  letter-spacing: 0.02em;
+}
+
+/* =============================================================
+   4. 詳細モーダル（.ax-modal 系）
+   造形は explorer.css（.exp-modal 系）を参考に本館と同質。
+   ただしパネルは Vault 地の上に開くため、地・インクは .ax-modal-root に
+   .vault を継がせて（HTML は section.ax.vault 内に配置）暗面で描画する。
+   ============================================================= */
+.ax-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 5vh, 64px) var(--sp-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ax-modal-root[hidden] { display: none; }
+
+.ax-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  -webkit-backdrop-filter: blur(var(--overlay-blur));
+  backdrop-filter: blur(var(--overlay-blur));
+  opacity: 0;
+  transition: opacity var(--dur-modal) var(--ease);
+}
+.ax-modal-root.is-open .ax-overlay { opacity: 1; }
+
+.ax-modal {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin-block: auto;
+  /* 別館モーダルは Vault の標本箱：暗面の地（--elevated）で組む。 */
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+  color: var(--ink);
+  opacity: 0;
+  transform: scale(0.98);
+  transform-origin: center;
+  transition: opacity var(--dur-modal) var(--ease),
+              transform var(--dur-modal) var(--ease);
+}
+.ax-modal-root.is-open .ax-modal {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ax-modal-inner {
+  padding: clamp(28px, 4vw, 48px);
+}
+
+/* ── 上部バー（閉じるのみ。前後ナビは持たない） ── */
+.ax-modal-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-4);
+  margin: -8px -8px var(--sp-2);
+  pointer-events: none;
+}
+.ax-modal-bar > * { pointer-events: auto; }
+
+.ax-modal-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--elevated-hover);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              background-color var(--dur-quick) var(--ease);
+}
+.ax-modal-close svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-quick) var(--ease);
+}
+.ax-modal-close:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.ax-modal-close:hover svg,
+.ax-modal-close:focus-visible svg {
+  transform: rotate(90deg);
+}
+.ax-modal-close:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* ── モーダルヘッダ ── */
+.ax-modal-head {
+  --edge: var(--c-un);
+  position: relative;
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--line);
+}
+.ax-modal-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+.ax-modal-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.ax-modal-cipher {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+.ax-modal-mitre {
+  font-size: var(--fs-plate);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tr-plate);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.ax-modal-nation {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 15px 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated-hover);
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ax-modal-nation .ax-dot {
+  box-shadow: 0 0 8px 0 color-mix(in srgb, var(--edge) 60%, transparent);
+}
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+  .ax-modal-nation .ax-dot { box-shadow: none; }
+}
+
+.ax-modal-name {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-display);
+  line-height: 1.02;
+  color: var(--ink);
+}
+.ax-modal-ja {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-body);
+  letter-spacing: 0.03em;
+  color: var(--ink-muted);
+}
+.ax-modal-hook {
+  margin: var(--sp-5) 0 0;
+  font-size: var(--fs-body-l);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  max-width: var(--reading);
+}
+
+/* ── モーダル本文フィールド ── */
+.ax-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+.ax-mfield {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.ax-mfield-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+}
+.ax-mfield-label .en { text-transform: uppercase; }
+.ax-mfield-label::before {
+  content: "";
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+.ax-mfield-text {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  max-width: var(--reading);
+}
+.ax-attrib-note {
+  display: inline-block;
+  font-size: var(--fs-body-s);
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  opacity: 0.85;
+  margin-inline-end: 6px;
+}
+
+/* ベンダー呼称の一覧（term ＋ name の対） */
+.ax-vendor-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.ax-vendor-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.34fr) 1fr;
+  gap: var(--sp-3) var(--sp-4);
+  align-items: baseline;
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ax-vendor-name-vendor {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.ax-vendor-name-alias {
+  font-size: var(--fs-body-s);
+  color: var(--ink);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+}
+
+/* メタ情報の行（初出・目的） */
+.ax-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5) clamp(32px, 6vw, 64px);
+}
+.ax-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ax-meta-key {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-muted);
+}
+.ax-meta-key .en { text-transform: uppercase; }
+.ax-meta-val {
+  font-size: var(--fs-body);
+  color: var(--ink);
+  line-height: 1.6;
+}
+.ax-meta-val.is-num { font-variant-numeric: tabular-nums; }
+
+/* チップ列（マルウェア／目的／セクター） */
+.ax-mchips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.ax-purpose-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--elevated-hover);
+  color: var(--ink);
+  font-size: var(--fs-body-s);
+}
+.ax-purpose-tag::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ── 代表的な事件（年表風） ── */
+.ax-ops {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.ax-op {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(96px, 0.24fr) 1fr;
+  gap: var(--sp-3) var(--sp-5);
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ax-op-year {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+.ax-op-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ax-op-title {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  color: var(--ink);
+}
+.ax-op-desc {
+  margin: 0;
+  font-size: var(--fs-body-s);
+  line-height: 1.8;
+  color: var(--ink-muted);
+}
+
+/* ── 本館の関連図録（→ apt:open で本館モーダルへ） ── */
+.ax-related {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.ax-related-list {
+  display: grid;
+  gap: var(--sp-3);
+}
+.ax-relcard {
+  --edge: var(--c-un);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  text-align: start;
+  width: 100%;
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--elevated-hover);
+  color: var(--ink);
+  font-family: var(--font);
+  cursor: pointer;
+  transition: transform var(--dur-hover) var(--ease),
+              background-color var(--dur-hover) var(--ease),
+              border-color var(--dur-hover) var(--ease);
+}
+.ax-relcard::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--edge);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  transition: background-color var(--dur-hover) var(--ease),
+              box-shadow var(--dur-hover) var(--ease);
+}
+.ax-relcard:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-plate-hover);
+}
+.ax-relcard:hover::before {
+  background: var(--accent);
+  box-shadow: 0 0 10px 0 var(--accent-soft);
+}
+.ax-relcard:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+.ax-relcard-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.ax-relcard-id {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-h2);
+  letter-spacing: var(--tr-h2);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.ax-relcard-note {
+  font-size: var(--fs-body-s);
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.ax-relcard-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--tr-label);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.ax-relcard-go svg { width: 13px; height: 13px; }
+
+/* ── 出典リンク ── */
+.ax-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.ax-source {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--fs-body-s);
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+.ax-source::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 2px;
+  background: var(--accent);
+  transform: translateY(-0.28em);
+  opacity: 0.7;
+}
+.ax-source a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease);
+  word-break: break-word;
+}
+.ax-source a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.ax-source a:focus-visible {
+  outline: var(--focus-width) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* =============================================================
+   5. モーション：リビール（main.js/base.css が未整備でも自己完結）
+   ============================================================= */
+.ax [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-reveal) var(--ease),
+              transform var(--dur-reveal) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.ax [data-reveal].is-visible,
+.ax [data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* =============================================================
+   6. レスポンシブ
+   ============================================================= */
+@media (max-width: 1080px) {
+  .ax-cross { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .ax-panels { grid-template-columns: 1fr; }
+  .ax-panel-wide { grid-column: auto; }
+  .ax-lex { grid-template-columns: 1fr; gap: 0; }
+  .ax-modal-topline { flex-wrap: wrap; }
+  .ax-meta { gap: var(--sp-5) var(--sp-6); }
+}
+
+@media (max-width: 560px) {
+  .ax-grid { grid-template-columns: 1fr; }
+  .ax-series-row { grid-template-columns: 1fr; gap: var(--sp-2); }
+  .ax-vendor-row { grid-template-columns: 1fr; gap: 4px; padding: var(--sp-3) 0; }
+  .ax-op { grid-template-columns: 1fr; gap: 6px; }
+  .ax-modal-inner { padding: clamp(22px, 6vw, 28px); }
+  .ax-modal-name { font-size: clamp(1.75rem, 9vw, 2.5rem); }
+}
+
+/* =============================================================
+   7. モーション無効化（prefers-reduced-motion）
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .ax *,
+  .ax-modal-root *,
+  .ax-modal-root {
+    animation: none !important;
+    transition: none !important;
+  }
+  .ax [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .ax-modal,
+  .ax-overlay {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .ax-card.ax-in,
+  .ax-card.ax-hold {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .ax-card::before,
+  .ax-card-tab {
+    transition: none !important;
+  }
+}

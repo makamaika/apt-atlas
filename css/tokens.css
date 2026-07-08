@@ -43,6 +43,12 @@
   --c-vn: #D89A2E;   /* ベトナム Vietnam */
   --c-un: #8A8F98;   /* 未公表 Undisclosed */
 
+  /* 別館（ANNEX）で追加する国・分類色（本館6色と同じ沈んだ顔料の系）。
+     識別専用。明面・暗面双方で識別でき、けばけばしくない低彩度。 */
+  --c-in: #C77D3A;   /* インド India（琥珀に寄せた土色。--c-vn と混同しない橙茶） */
+  --c-us: #4E7CA8;   /* 米国 United States（沈んだ鋼青。--c-kp と近すぎない鈍色） */
+  --c-cr: #7A8290;   /* 犯罪組織 Criminal（国家帰属なし＝無彩色寄りの石色） */
+
   /* 国別バインドのデフォルト（.cc-* が上書き） */
   --edge: var(--c-un);
 
@@ -199,3 +205,6 @@
 .cc-ru { --edge: var(--c-ru); }
 .cc-vn { --edge: var(--c-vn); }
 .cc-un { --edge: var(--c-un); }
+.cc-in { --edge: var(--c-in); }
+.cc-us { --edge: var(--c-us); }
+.cc-cr { --edge: var(--c-cr); }
