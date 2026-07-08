@@ -77,7 +77,7 @@
   }
 
   /* =============================================================
-     1. 命名体系の展示（CrowdStrike / Microsoft / 多名の実例）
+     1. 命名体系の展示（CrowdStrike / Microsoft / その他の流儀 / 多名の実例）
      ============================================================= */
   function renderTaxonomy() {
     var tax = DATA.taxonomy || {};
@@ -102,6 +102,12 @@
           '<dd class="ax-lex-country">' + esc(row.country) + '</dd>' +
         '</div>';
       }).join('');
+    }
+
+    // その他の流儀（MITRE の中立番号・Talos の英数字識別子・各社独自コードネーム）
+    var othersEl = document.querySelector('[data-ax-others]');
+    if (othersEl && typeof tax.others === 'string' && tax.others) {
+      othersEl.textContent = tax.others;
     }
 
     // 同一グループ多名の実例

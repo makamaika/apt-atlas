@@ -37,30 +37,100 @@
     }
 
     var groups = DATA.groups;
-    var edges = Array.isArray(REL.edges) ? REL.edges : [];
 
     /* ---------- インデックス構築（レイアウト非依存・一度だけ） ---------- */
     var byId = Object.create(null);
     groups.forEach(function (g) { byId[g.id] = g; });
 
-    // 有効なエッジのみ（両端がデータに存在するもの）
-    var validEdges = edges.filter(function (e) {
-      return byId[e.a] && byId[e.b] && e.a !== e.b;
+    function keyOf(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
+
+    /* ---------- エッジ導出（sharedMalware から実行時に再構成） ----------
+       ・相対固有ツール（distinctive）だけを線にする。Cobalt Strike 等の
+         コモディティ（commodity）は共有リスト・モーダル表示に残すが線にしない。
+       ・共有 2 組織（n=2）は通常線、3 組織以上（n>=3）は共起メッシュ。
+       ・同一ペアが複数ツールを共有しても線は 1 本に統合（二重カウントなし）。
+       ・relations.js の edges からは attribution（組織的帰属の系譜）のみ描く。
+       挿入順はオブジェクトキー挿入順で決定論的（乱数不使用の方針を維持）。 */
+    var TIERS = (REL.malwareTiers && Array.isArray(REL.malwareTiers.distinctive))
+      ? REL.malwareTiers
+      : {
+          distinctive: ['SOGU', 'HOMEUNIX', 'PHOTO', 'ENFAL', 'MIRAGE', 'POWBAT'],
+          commodity: ['BEACON', 'GH0ST', 'ZXSHELL', 'POISON IVY']
+        };
+    var DISTINCTIVE = new Set(TIERS.distinctive);
+
+    var pairMap = Object.create(null);  // keyOf(a,b) -> { a, b, malware: [], tier }
+    var pairKeys = [];                  // 挿入順（決定論的）
+    (Array.isArray(REL.sharedMalware) ? REL.sharedMalware : []).forEach(function (entry) {
+      if (!DISTINCTIVE.has(entry.malware)) return;   // コモディティは線にしない
+      var ms = (entry.groups || []).filter(function (id) { return byId[id]; });
+      if (ms.length < 2) return;
+      var tier = ms.length === 2 ? 'pair' : 'mesh';  // n=2は通常、n>=3はメッシュ
+      for (var i = 0; i < ms.length; i++) {
+        for (var j = i + 1; j < ms.length; j++) {
+          var key = keyOf(ms[i], ms[j]);
+          var rec = pairMap[key];
+          if (!rec) {
+            rec = pairMap[key] = { a: ms[i], b: ms[j], malware: [], tier: 'mesh' };
+            pairKeys.push(key);
+          }
+          rec.malware.push(entry.malware);
+          if (tier === 'pair') rec.tier = 'pair';    // n=2共有が1つでもあれば通常線が勝つ
+        }
+      }
     });
 
-    // 隣接 & 度数
+    var drawnEdges = pairKeys.map(function (key) {
+      var rec = pairMap[key];
+      return {
+        a: rec.a,
+        b: rec.b,
+        etype: rec.tier === 'pair' ? 'malware' : 'mesh',
+        label: rec.malware.join('・') + 'を共有',
+        // MIRAGE は命名論争含み（表示は変えない・後続決定用のデータフック）
+        note: rec.malware.indexOf('MIRAGE') !== -1 ? 'naming-disputed' : null
+      };
+    });
+
+    // 帰属エッジ（relations.js 由来）。防御的に attribution 以外は無視する。
+    (Array.isArray(REL.edges) ? REL.edges : []).forEach(function (e) {
+      if (e.type !== 'attribution' || !byId[e.a] || !byId[e.b] || e.a === e.b) return;
+      drawnEdges.push({ a: e.a, b: e.b, etype: 'attribution', label: e.label, note: null });
+    });
+
+    // 配線演出の見栄え：通常線 → 帰属 → メッシュの順に安定ソート
+    var ETYPE_ORDER = { malware: 0, attribution: 1, mesh: 2 };
+    drawnEdges = drawnEdges
+      .map(function (e, i) { return { e: e, i: i }; })
+      .sort(function (x, y) {
+        var d = (ETYPE_ORDER[x.e.etype] || 0) - (ETYPE_ORDER[y.e.etype] || 0);
+        return d !== 0 ? d : x.i - y.i;
+      })
+      .map(function (o) { return o.e; });
+
+    // 隣接 & 度数（固有ツール共起グラフ＋帰属エッジ。メッシュはペア統合済み）
     var adj = Object.create(null);      // id -> Set(近隣id)
     var degree = Object.create(null);
     groups.forEach(function (g) { adj[g.id] = new Set(); degree[g.id] = 0; });
 
-    function keyOf(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
-
-    validEdges.forEach(function (e) {
+    drawnEdges.forEach(function (e) {
       adj[e.a].add(e.b);
       adj[e.b].add(e.a);
       degree[e.a]++;
       degree[e.b]++;
     });
+
+    // 図キャプションの本数を実データから動的算出（静的数値のズレを防ぐ）
+    (function () {
+      var solid = 0, attr = 0;
+      drawnEdges.forEach(function (e) {
+        if (e.etype === 'attribution') attr++; else solid++;
+      });
+      var elSolid = document.getElementById('net-count-solid');
+      var elAttr = document.getElementById('net-count-attr');
+      if (elSolid) elSolid.textContent = String(solid);
+      if (elAttr) elAttr.textContent = String(attr);
+    })();
 
     /* ---------- 国クラスタ定義 ---------- */
     var COUNTRY_ORDER = ['CN', 'IR', 'KP', 'RU', 'VN', 'UN'];
@@ -91,10 +161,11 @@
     var HUB_MIN_DEGREE = 3;
 
     /* ---------- 半径スケール（度数に応じて拡大） ----------
-       孤立ノード r6 → 最大ハブ(APT40, 度数10) r13 程度。
-       r = 6 + sqrt(deg) * K。sqrt(10)≈3.162 なので K=2.2 で ≈13。 */
+       度数＝固有ツール共起グラフ＋帰属で、分布は {0,1,2} と {8,9} の二峰型。
+       勾配が急だと高位ノードが皆ほぼ同径に張り付くため緩やかにする。
+       deg0→6.0 / deg1→7.7 / deg2→8.4 / deg8→10.8 / deg9→11.1（上限13）。 */
     function radiusFor(deg) {
-      return Math.min(13, 6 + Math.sqrt(deg) * 2.2);
+      return Math.min(13, 6 + Math.sqrt(deg) * 1.7);
     }
 
     /* ---------- レイアウト・プロファイル（横長 / 縦長） ----------
@@ -154,8 +225,7 @@
       return count === 1 ? 0
         : count === 2 ? 46
         : count <= 4 ? 42
-        : count <= 6 ? 38
-        : 34;
+        : 38;  // 大クラスタも38（ラベル混雑緩和。中国28ノードで最外周≈200）
     }
 
     /* ---------- 状態（再構築で作り替わる） ---------- */
@@ -167,7 +237,7 @@
       if (!neighbors || neighbors.size === 0) return '同国クラスタの一員（直接の共有関係は未報告）';
       var mset = [];
       var seen = Object.create(null);
-      validEdges.forEach(function (e) {
+      drawnEdges.forEach(function (e) {
         if (e.a !== id && e.b !== id) return;
         var lbl = e.label || '';
         if (lbl && !seen[lbl]) { seen[lbl] = 1; mset.push(lbl); }
@@ -392,7 +462,7 @@
 
       /* ---------- エッジ（曲線） ---------- */
       var edgeEls = []; // {el, a, b, key}
-      validEdges.forEach(function (e) {
+      drawnEdges.forEach(function (e) {
         var pa = pos[e.a], pb = pos[e.b];
         if (!pa || !pb) return;
         var mx = (pa.x + pb.x) / 2;
@@ -400,6 +470,7 @@
         var dx = pb.x - pa.x, dy = pb.y - pa.y;
         var len = Math.sqrt(dx * dx + dy * dy) || 1;
         var bow = Math.min(40, len * 0.14);
+        if (e.etype === 'mesh') bow *= 0.7;  // メッシュは曲がりを弱めて網目を静かに
         var sign = ((e.a.charCodeAt(3) + e.b.charCodeAt(3)) % 2) ? 1 : -1;
         var cxp = mx + (-dy / len) * bow * sign;
         var cyp = my + (dx / len) * bow * sign;
@@ -409,10 +480,10 @@
         var path = document.createElementNS(SVG_NS, 'path');
         path.setAttribute('class', 'net-edge');
         path.setAttribute('d', d);
-        path.setAttribute('data-etype', e.type || 'malware');
+        path.setAttribute('data-etype', e.etype);
+        if (e.note) path.setAttribute('data-note', e.note);
         path.setAttribute('data-a', e.a);
         path.setAttribute('data-b', e.b);
-        // 帰属エッジの国色をエッジ強調に使えるよう、両端の国クラスを持たせる
         gEdges.appendChild(path);
         edgeEls.push({ el: path, a: e.a, b: e.b, key: keyOf(e.a, e.b) });
       });
@@ -741,9 +812,11 @@
 
     Array.prototype.forEach.call(legendKeys, function (key) {
       var cc = key.getAttribute('data-country');
-      // キーボード操作のため tabindex/role を付与（凡例チップは元々静的span）
+      // キーボード操作のため tabindex/role を付与（凡例チップは元々静的span）。
+      // role は無条件に button へ上書きする — HTML 側に別 role が残っていても
+      // トグルボタンであること・aria-pressed の押下状態を支援技術へ確実に伝えるため。
       if (!key.hasAttribute('tabindex')) key.setAttribute('tabindex', '0');
-      if (!key.hasAttribute('role')) key.setAttribute('role', 'button');
+      key.setAttribute('role', 'button');
       key.setAttribute('aria-pressed', 'false');
 
       // hover/focus プレビュー（ピン中は他キーのプレビューを抑制）

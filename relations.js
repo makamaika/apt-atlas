@@ -77,180 +77,16 @@ window.APT_RELATIONS = {
       ]
     }
   ],
+  "malwareTiers": {
+    "distinctive": ["SOGU", "HOMEUNIX", "PHOTO", "ENFAL", "MIRAGE", "POWBAT"],
+    "commodity": ["BEACON", "GH0ST", "ZXSHELL", "POISON IVY"]
+  },
   "edges": [
-    {
-      "a": "APT40",
-      "b": "APT20",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT21",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT22",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT26",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT27",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT3",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT31",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT40",
-      "b": "APT9",
-      "type": "malware",
-      "label": "SOGUを共有"
-    },
-    {
-      "a": "APT19",
-      "b": "APT20",
-      "type": "malware",
-      "label": "BEACONを共有"
-    },
-    {
-      "a": "APT19",
-      "b": "APT26",
-      "type": "malware",
-      "label": "BEACONを共有"
-    },
-    {
-      "a": "APT19",
-      "b": "APT32",
-      "type": "malware",
-      "label": "BEACONを共有"
-    },
-    {
-      "a": "APT14",
-      "b": "APT9",
-      "type": "malware",
-      "label": "GH0STを共有"
-    },
-    {
-      "a": "APT20",
-      "b": "APT9",
-      "type": "malware",
-      "label": "GH0STを共有"
-    },
-    {
-      "a": "APT21",
-      "b": "APT9",
-      "type": "malware",
-      "label": "GH0STを共有"
-    },
-    {
-      "a": "APT4",
-      "b": "APT9",
-      "type": "malware",
-      "label": "PHOTOを共有"
-    },
-    {
-      "a": "APT4",
-      "b": "APT40",
-      "type": "malware",
-      "label": "PHOTOを共有"
-    },
-    {
-      "a": "APT15",
-      "b": "APT24",
-      "type": "malware",
-      "label": "ENFALを共有"
-    },
-    {
-      "a": "APT15",
-      "b": "APT25",
-      "type": "malware",
-      "label": "MIRAGEを共有"
-    },
-    {
-      "a": "APT34",
-      "b": "APT39",
-      "type": "malware",
-      "label": "POWBATを共有"
-    },
-    {
-      "a": "APT20",
-      "b": "APT27",
-      "type": "malware",
-      "label": "ZXSHELLを共有"
-    },
     {
       "a": "APT38",
       "b": "APT45",
       "type": "attribution",
       "label": "共にLazarus/RGB系(北朝鮮偵察総局)関連"
-    },
-    {
-      "a": "APT37",
-      "b": "APT38",
-      "type": "attribution",
-      "label": "共に北朝鮮国家支援グループ"
-    },
-    {
-      "a": "APT37",
-      "b": "APT45",
-      "type": "attribution",
-      "label": "共に北朝鮮国家支援グループ"
-    },
-    {
-      "a": "APT15",
-      "b": "APT40",
-      "type": "tactic",
-      "label": "インフラ・バックドアをリソース共有(中国系実行者間)"
-    },
-    {
-      "a": "APT15",
-      "b": "APT27",
-      "type": "tactic",
-      "label": "中国系グループ間のインフラ共有傾向"
-    },
-    {
-      "a": "APT38",
-      "b": "APT41",
-      "type": "tactic",
-      "label": "国家支援活動と金銭目的活動を併せ持つ二重活動"
-    },
-    {
-      "a": "APT41",
-      "b": "APT45",
-      "type": "tactic",
-      "label": "国家支援活動と金銭目的活動を併せ持つ二重活動"
-    },
-    {
-      "a": "APT33",
-      "b": "APT35",
-      "type": "tactic",
-      "label": "凝ったソーシャル・エンジニアリング(おとり求人票等)を多用"
-    },
-    {
-      "a": "APT33",
-      "b": "APT34",
-      "type": "tactic",
-      "label": "中東域内の重要産業(エネルギー等)を標的とする点で類似"
     }
   ],
   "similarTo": {
@@ -1179,7 +1015,7 @@ window.APT_RELATIONS = {
         "APT20",
         "APT21"
       ],
-      "theme": "GH0ST RATやHOMEUNIXバックドアなど、比較的古くから中国系グループ間で広く使い回されてきた汎用ツールを共有するグループ群。単独グループ固有というより中国のサイバー攻撃エコシステム全体で流通するツールセットの利用実態を表す。"
+      "theme": "公開流通する汎用RATであるGH0STと、中国系グループ間で共有されてきた非公開バックドアHOMEUNIXの双方を、比較的古くから併用してきたグループ群。単独グループ固有というより中国のサイバー攻撃エコシステム内でツールセットが流通・共有される実態を表す。"
     },
     {
       "name": "金銭目的を併せ持つ国家支援グループ(二重活動)",

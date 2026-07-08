@@ -120,6 +120,34 @@
   transition: box-shadow var(--dur-quick) var(--ease);
 }
 
+/* ---------- 線種凡例（実線／網目／点線の読み方） ---------- */
+.net-legend-lines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-6);
+  margin-block: 0 var(--sp-5);
+}
+.net-line-key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+}
+.net-line-swatch {
+  width: 26px;
+  height: 0;
+  border-top: 2px solid var(--ink-muted);
+  flex: none;
+}
+.net-line-swatch.is-mesh { border-top-width: 1px; opacity: 0.55; }
+.net-line-swatch.is-dashed { border-top: 2px dashed var(--accent); }
+.net-legend-note {
+  color: var(--ink-muted);
+  font-size: var(--fs-body-s);
+  opacity: 0.85;
+}
+
 /* ---------- 図の器 ---------- */
 .net-figure {
   margin: 0 0 var(--sp-8);
@@ -219,10 +247,17 @@
   stroke: var(--accent);
   opacity: 0.22;
 }
-/* 戦術エッジも朱寄りで識別（実線のまま） */
-.net-edge[data-etype="tactic"].is-wired {
-  stroke: var(--accent);
-  opacity: 0.2;
+/* 共起メッシュ（3組織以上の固有ツール共有網）— 通常線より減衰 */
+.net-edge[data-etype="mesh"] { stroke-width: 0.55; }
+.net-edge[data-etype="mesh"].is-wired { opacity: 0.11; }
+.net-svg.is-focusing .net-edge[data-etype="mesh"].is-wired { opacity: 0.04; }
+/* クラスタ強調中：選択クラスタ内のメッシュは is-dim(0.06) より明るく保ち、
+   「選択 > 減光」の視覚序列を維持する（クラスタ外は is-dim !important が勝つ） */
+.net-svg.is-clustering .net-edge[data-etype="mesh"].is-wired { opacity: 0.08; }
+.net-edge[data-etype="mesh"].is-active {
+  opacity: 0.65 !important;
+  stroke: var(--accent) !important;
+  stroke-width: 1.1 !important;
 }
 
 /* =============================================================
@@ -507,7 +542,7 @@
     transition: none;
   }
   .net-edge.is-wired { opacity: 0.2; }
-  .net-edge[data-etype="attribution"].is-wired,
-  .net-edge[data-etype="tactic"].is-wired { opacity: 0.22; }
+  .net-edge[data-etype="attribution"].is-wired { opacity: 0.22; }
+  .net-edge[data-etype="mesh"].is-wired { opacity: 0.11; }
   .net-hl:hover, .net-hl:focus-visible { transform: none; }
 }

@@ -14,6 +14,9 @@
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F5F3EE">
 
+  <!-- favicon（自己完結の data: URI インラインSVG。/favicon.ico への 404 を防ぐ。朱＝--accent と同色） -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5.5' fill='%23C8452E'/%3E%3C/svg%3E">
+
   <!-- FOUC 防止：CSS 読込より前に、保存済みテーマを html[data-theme] へ即時反映する。
        localStorage 読取のみの極小スクリプト。失敗しても既定（編纂）へ無害にフォールバック。
        完全なテーマ適用・永続化・ポップオーバー制御は末尾の js/theme.js が担う。 -->
@@ -276,7 +279,7 @@
         <div class="intro-def" data-reveal style="--reveal-delay:60ms">
           <p class="intro-def-body">
             一般のサイバー攻撃者と同じく、APT 攻撃グループも情報の窃取・妨害活動・インフラの破壊を試みる。
-            しかし決定的に異なるのは、その<em>持続性</em>にある。目的を達成するまで活動をやめず、
+            しかし決定的な違いは、その<em>持続性</em>にある。目的を達成するまで活動をやめず、
             セキュリティ対策が講じられても容易に適応し、多くの場合、同じ標的を執拗に狙い続ける。
           </p>
           <p class="intro-def-note">
@@ -518,13 +521,22 @@
           </p>
         </header>
 
-        <div class="net-legend" data-reveal style="--reveal-delay:80ms" role="list" aria-label="国別の凡例">
-          <span class="net-key cc-cn" data-country="CN" role="listitem"><span class="net-dot" aria-hidden="true"></span>中国<span class="net-key-n">28</span></span>
-          <span class="net-key cc-ir" data-country="IR" role="listitem"><span class="net-dot" aria-hidden="true"></span>イラン<span class="net-key-n">4</span></span>
-          <span class="net-key cc-kp" data-country="KP" role="listitem"><span class="net-dot" aria-hidden="true"></span>北朝鮮<span class="net-key-n">3</span></span>
-          <span class="net-key cc-ru" data-country="RU" role="listitem"><span class="net-dot" aria-hidden="true"></span>ロシア<span class="net-key-n">2</span></span>
-          <span class="net-key cc-vn" data-country="VN" role="listitem"><span class="net-dot" aria-hidden="true"></span>ベトナム<span class="net-key-n">1</span></span>
-          <span class="net-key cc-un" data-country="UN" role="listitem"><span class="net-dot" aria-hidden="true"></span>未公表<span class="net-key-n">1</span></span>
+        <!-- 凡例チップは network.js がトグルボタン化（role=button / aria-pressed）するため、
+             list/listitem 意味論はあえて与えない（listitem 内では aria-pressed が無効なため）。 -->
+        <div class="net-legend" data-reveal style="--reveal-delay:80ms" role="group" aria-label="国別の凡例">
+          <span class="net-key cc-cn" data-country="CN"><span class="net-dot" aria-hidden="true"></span>中国<span class="net-key-n">28</span></span>
+          <span class="net-key cc-ir" data-country="IR"><span class="net-dot" aria-hidden="true"></span>イラン<span class="net-key-n">4</span></span>
+          <span class="net-key cc-kp" data-country="KP"><span class="net-dot" aria-hidden="true"></span>北朝鮮<span class="net-key-n">3</span></span>
+          <span class="net-key cc-ru" data-country="RU"><span class="net-dot" aria-hidden="true"></span>ロシア<span class="net-key-n">2</span></span>
+          <span class="net-key cc-vn" data-country="VN"><span class="net-dot" aria-hidden="true"></span>ベトナム<span class="net-key-n">1</span></span>
+          <span class="net-key cc-un" data-country="UN"><span class="net-dot" aria-hidden="true"></span>未公表<span class="net-key-n">1</span></span>
+        </div>
+
+        <div class="net-legend-lines" data-reveal style="--reveal-delay:100ms" aria-label="線種の凡例">
+          <span class="net-line-key"><span class="net-line-swatch" aria-hidden="true"></span>実線＝固有マルウェアの共有</span>
+          <span class="net-line-key"><span class="net-line-swatch is-mesh" aria-hidden="true"></span>薄い網目＝3組織以上の共有網</span>
+          <span class="net-line-key"><span class="net-line-swatch is-dashed" aria-hidden="true"></span>点線＝組織的帰属の系譜</span>
+          <span class="net-legend-note">汎用ツール（Cobalt Strike等）の共有と行動の類似は線にしない。</span>
         </div>
 
         <figure class="net-figure" data-reveal style="--reveal-delay:140ms">
@@ -533,7 +545,8 @@
             <p class="net-fallback">ネットワーク図を描画しています…</p>
           </div>
           <figcaption class="net-caption label">
-            ノード＝39組織 ／ 線＝共有マルウェア・帰属・戦術の関係（全29本）。
+            ノード＝39組織 ／ 実線＋薄い網目＝固有マルウェアの共有・計<span id="net-count-solid">41</span>本（うち薄い網目は3組織以上の共有網）／
+            点線＝組織的帰属の系譜（<span id="net-count-attr">1</span>本）。汎用ツールの共有と行動の類似は線にしない。
             ノードにカーソルを合わせる（タップする）と繋がりが灯り、選ぶと詳細が開く。
           </figcaption>
         </figure>
@@ -552,8 +565,9 @@
                 APT3・APT9・APT20・APT21・APT22・APT26・APT27・APT31・APT40 の
                 <strong>9グループ</strong>が共有する。これらが一つの中国系クラスタを成し、
                 個々が独立組織というより共通の開発・インフラ資源を分け合うエコシステムであることを示唆する。
+                図ではこの9組織が薄い網目で結ばれる。
               </p>
-              <p class="net-hl-foot">結節点 <span class="net-mono">APT40</span>（最多10接続）を中心に見る →</p>
+              <p class="net-hl-foot">共有網の一角 <span class="net-mono">APT40</span> の詳細を開く →</p>
             </article>
 
             <article class="net-hl cc-kp" data-country="KP" data-focus="APT38" tabindex="0" role="button"
@@ -568,19 +582,20 @@
                 <span class="net-mono">APT37</span>（ScarCruft）を含め、
                 北朝鮮系グループには諜報と外貨獲得の両面で活動する例が複数確認されている。
               </p>
-              <p class="net-hl-foot">結節点 <span class="net-mono">APT38</span> を中心に見る →</p>
+              <p class="net-hl-foot">点線の系譜 <span class="net-mono">APT38</span> を開く →</p>
             </article>
 
             <article class="net-hl cc-cn" data-country="CN" data-focus="APT15" tabindex="0" role="button"
                      aria-label="APT15 を図の中心として開く" data-reveal style="--reveal-delay:200ms">
               <span class="net-hl-edge" aria-hidden="true"></span>
-              <p class="net-hl-tag label">戦術 ／ SHARED INFRASTRUCTURE</p>
+              <p class="net-hl-tag label">共有バックドア ／ ENFAL · MIRAGE</p>
               <h3 class="net-hl-title">APT15 — 帰属を曖昧にする影の配線</h3>
               <p class="net-hl-body">
-                <span class="net-mono">APT15</span> は固有のバックドアやインフラを持たず、
-                ENFAL を <span class="net-mono">APT24</span> と、MIRAGE を <span class="net-mono">APT25</span> と共有し、
-                <span class="net-mono">APT40</span>・<span class="net-mono">APT27</span> ともインフラを融通する。
-                <strong>4本</strong>の線が示すのは、資源共有によって攻撃の関与特定を困難にする手口だ。
+                <span class="net-mono">APT15</span> は ENFAL を <span class="net-mono">APT24</span> と、
+                MIRAGE を <span class="net-mono">APT25</span> と共有する。
+                他の中国系グループとのインフラ融通も報告されるが、
+                行動の類似やインフラ共有の傾向は本図では線にしない。
+                図に残る<strong>2本</strong>の実線が、文書化されたツール共有の核だ。
               </p>
               <p class="net-hl-foot">結節点 <span class="net-mono">APT15</span> を中心に見る →</p>
             </article>
@@ -800,6 +815,15 @@
               <dl class="ax-lex" data-ax-ms><!-- annex.js が families から生成 --></dl>
             </article>
 
+            <!-- その他の流儀（MITRE の中立番号・Talos の英数字識別子・各社独自コードネーム） -->
+            <article class="ax-panel ax-panel-wide" role="listitem" data-reveal style="--reveal-delay:180ms">
+              <div class="ax-panel-top">
+                <span class="ax-panel-vendor label">MITRE ／ Cisco Talos ／ Kaspersky・ESET ほか</span>
+                <h4 class="ax-panel-name">中立番号と独自コードネーム</h4>
+              </div>
+              <p class="ax-panel-note" data-ax-others><!-- annex.js が taxonomy.others から生成 --></p>
+            </article>
+
             <!-- 同一グループ多名の実例 -->
             <article class="ax-panel ax-panel-wide" role="listitem" data-reveal style="--reveal-delay:120ms">
               <div class="ax-panel-top">
@@ -867,6 +891,9 @@
           <p class="foot-source">
             Google Cloud Threat Intelligence「APT45」記事
             <a href="https://cloud.google.com/blog/ja/topics/threat-intelligence/apt45-north-korea-digital-military-machine" target="_blank" rel="noopener noreferrer">cloud.google.com の記事を開く</a>
+          </p>
+          <p class="foot-source">
+            別館「番号なき者たち」は MITRE ATT&amp;CK・CISA・Microsoft・CrowdStrike 等の公開資料にもとづく — 各標本の個別出典は各詳細モーダルに記載
           </p>
         </div>
       </div>
