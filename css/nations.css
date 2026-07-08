@@ -134,9 +134,8 @@
   height: 10px;
   border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
-  /* 末端の点灯ドットがトラック外へ僅かに滲めるよう clip しない。
-     フィルは自身の border-radius で丸められるため overflow は不要。 */
-  overflow: visible;
+  /* フィルがトラックからはみ出さないよう clip する（右端を面一に保つ） */
+  overflow: hidden;
 }
 .nat-bar-fill {
   position: absolute;
@@ -151,31 +150,9 @@
   transition: width 900ms var(--ease);
   will-change: width;
 }
-/* バー末端の「点灯」ドット（国色）。フィルの右端に載り、伸長と共に移動する。
-   数値の到達点を光点で示し、平板さを解く。 */
-.nat-bar-fill::after {
-  content: "";
-  position: absolute;
-  inset-inline-end: 0;
-  inset-block-start: 50%;
-  inline-size: 8px;
-  block-size: 8px;
-  border-radius: 50%;
-  background: var(--edge);
-  box-shadow: 0 0 8px 0 var(--edge);
-  transform: translate(50%, -50%);
-  /* フィル幅が 0 の初期は点灯させない（左端にドットが残らないように） */
-  opacity: 0;
-  transition: opacity var(--dur-quick) var(--ease);
-}
 /* リビール完了時（.is-visible が nat-chart に付与される）に幅を確定値へ */
 .nat-chart.is-visible .nat-bar-fill {
   width: var(--bar-w, 0%);
-}
-.nat-chart.is-visible .nat-bar-fill::after {
-  opacity: 1;
-  /* 伸長の終盤で点が灯るよう、僅かに遅らせる（バーが到達してから点灯） */
-  transition-delay: 620ms;
 }
 
 /* ホバーで該当行以外を減光し、視線を1国に集める（読み物としてのフォーカス誘導）。 */
@@ -614,9 +591,5 @@
   /* リビール未発火でもバーを最終状態に（main.js が .is-visible を付けない場合の保険） */
   .nat-bar-fill {
     width: var(--bar-w, 0%);
-  }
-  /* 末端の点灯ドットは最終状態で常時表示（遅延点灯を待たない）。 */
-  .nat-bar-fill::after {
-    opacity: 1;
   }
 }
