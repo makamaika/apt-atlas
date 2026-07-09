@@ -124,7 +124,7 @@ window.APT_ANNEX = {
       },
       {
         "canonical": "Volt Typhoon系(中国、通信・重要インフラ標的と評価)",
-        "names": "Volt Typhoon(Microsoft)= VANGUARD PANDA/BRONZE SILHOUETTE(CrowdStrike)——2025年のMicrosoft-CrowdStrike共同マッピングで同一アクターと確認されたとされる"
+        "names": "Volt Typhoon(Microsoft)= Vanguard Panda(CrowdStrike)= BRONZE SILHOUETTE(Secureworks)——2025年のMicrosoft-CrowdStrike共同マッピングでVolt Typhoon/Vanguard Pandaが同一アクターと確認されたとされる"
       },
       {
         "canonical": "Turla(ロシア、老舗のサイバースパイグループと評価)",
@@ -244,7 +244,7 @@ window.APT_ANNEX = {
       "nameJa": "ソルト・タイフーン",
       "country": "中国",
       "countryCode": "CN",
-      "attribution": "中国国家安全部(MSS)関連とされる。CISA等の共同勧告では複数の中国拠点企業(Sichuan Juxinhe Network Technology等)との関連も指摘",
+      "attribution": "中国国家安全部(MSS)関連とされる。2025年8月のCISA等共同勧告(AA25-239A)では、関連する中国拠点企業(Sichuan Juxinhe Network Technology等)が人民解放軍(PLA)複数部隊および国家安全部(MSS)の双方に技術・攻撃能力を提供していると指摘されている",
       "vendorNames": [
         {
           "vendor": "Trend Micro",
@@ -312,9 +312,7 @@ window.APT_ANNEX = {
           "desc": "通信・政府・運輸・宿泊・軍事インフラのプロバイダエッジ/カスタマーエッジルーターを標的に持続的侵入を継続"
         }
       ],
-      "relatedApt": [
-        "APT41"
-      ],
+      "relatedApt": [],
       "sources": [
         {
           "title": "CISA AA25-239A: Countering Chinese State-Sponsored Actors Compromise of Networks Worldwide to Feed Global Espionage System",
@@ -344,7 +342,7 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "CrowdStrike",
-          "name": "Stately Taurus"
+          "name": "Mustang Panda(CrowdStrikeによる命名)"
         },
         {
           "vendor": "Mandiant/Google",
@@ -468,7 +466,7 @@ window.APT_ANNEX = {
           "name": "Winnti / Winnti Group"
         },
         {
-          "vendor": "MITRE ATT&CK",
+          "vendor": "Symantec/Broadcom",
           "name": "Blackfly"
         }
       ],
@@ -585,7 +583,7 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "PwC",
-          "name": "YTTRIUM"
+          "name": "Blue Kitsune"
         }
       ],
       "mitre": "G0016",
@@ -695,7 +693,7 @@ window.APT_ANNEX = {
       "mitre": "G0034",
       "firstSeen": "2009",
       "hook": "電力網を止めた国家のサイバー破壊工作部隊",
-      "summary": "Sandwormは、ロシアGRU(参謀本部情報総局)第74455部隊に帰属するとされる破壊活動特化型の脅威アクターで、少なくとも2009年から活動しているとされる。2015年・2016年のウクライナ電力網攻撃、2017年の世界的ワイパー攻撃NotPetya、2018年平昌冬季五輪を狙ったOlympic Destroyerなど、国家間の緊張と連動した破壊的サイバー作戦を継続してきたと評価される。2020年には米司法省がGRU将校6名をこれら一連の攻撃に関与したとして起訴した。近年はMicrosoftが「Seashell Blizzard」の名称で追跡しており、傘下のサブグループによる「BadPilotキャンペーン」(2021年以降、エッジ機器の脆弱性を悪用した世界規模の初期アクセス作戦)も報告されている。2025年以降はウクライナ関連の破壊工作に加え、親ロシア派ハクティビスト(Z-Pentestなど)への技術支援・資金提供にも関与しているとされる。",
+      "summary": "Sandwormは、ロシアGRU(参謀本部情報総局)第74455部隊に帰属するとされる破壊活動特化型の脅威アクターで、少なくとも2009年から活動しているとされる。2015年・2016年のウクライナ電力網攻撃、2017年の世界的ワイパー攻撃NotPetya、2018年平昌冬季五輪を狙ったOlympic Destroyerなど、国家間の緊張と連動した破壊的サイバー作戦を継続してきたと評価される。2020年には米司法省がGRU将校6名をこれら一連の攻撃に関与したとして起訴した。近年はMicrosoftが「Seashell Blizzard」の名称で追跡しており、傘下のサブグループによる「BadPilotキャンペーン」(2021年以降、エッジ機器の脆弱性を悪用した世界規模の初期アクセス作戦)も報告されている。2025年以降はウクライナ関連の破壊工作に加え、親ロシア派ハクティビスト(2022年創設のCyber Army of Russia Reborn=CARRなど)の創設・資金提供を支援したと評価される(なおCARRから2024年に分離したZ-Pentestは、GRUの関与から独立して活動しているとされる)。",
       "purposes": [
         "destructive",
         "espionage",
@@ -721,8 +719,7 @@ window.APT_ANNEX = {
         "Olympic Destroyer",
         "VPNFilter",
         "GreyEnergy",
-        "Cyclops Blink",
-        "WhisperGate"
+        "Cyclops Blink"
       ],
       "notableOps": [
         {
@@ -767,7 +764,7 @@ window.APT_ANNEX = {
       "vendorNames": [
         {
           "vendor": "Microsoft",
-          "name": "Secret Blizzard"
+          "name": "Secret Blizzard(旧称 KRYPTON)"
         },
         {
           "vendor": "CrowdStrike",
@@ -775,11 +772,27 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "Mandiant/Google Cloud",
-          "name": "UNC4210 / ITG12"
+          "name": "UNC4210(2022年のAndromeda基盤乗っ取り活動の呼称)"
         },
         {
-          "vendor": "Fortinet/その他",
-          "name": "Waterbug / WhiteBear / Krypton / Group 88 / Pensive Ursa / BELUGASTURGEON"
+          "vendor": "IBM X-Force",
+          "name": "ITG12"
+        },
+        {
+          "vendor": "Symantec/Broadcom",
+          "name": "Waterbug"
+        },
+        {
+          "vendor": "Kaspersky",
+          "name": "WhiteBear"
+        },
+        {
+          "vendor": "Palo Alto Networks (Unit 42)",
+          "name": "Pensive Ursa"
+        },
+        {
+          "vendor": "その他",
+          "name": "Group 88 / BELUGASTURGEON / Uroburos / Snake"
         }
       ],
       "mitre": "G0010",
@@ -868,10 +881,14 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "Palo Alto Networks(Unit42)",
-          "name": "IRON TILDEN"
+          "name": "Trident Ursa"
         },
         {
           "vendor": "SecureWorks",
+          "name": "IRON TILDEN"
+        },
+        {
+          "vendor": "Cloudflare",
           "name": "NastyShrew"
         }
       ],
@@ -971,7 +988,7 @@ window.APT_ANNEX = {
       "mitre": "G0032",
       "firstSeen": "2009年頃",
       "hook": "北朝鮮の国家ハッキング複合体、その中核",
-      "summary": "Lazarus Groupは、北朝鮮の偵察総局(RGB)第3局傘下のLab 110(旧Bureau 121)を出自とするとされる、北朝鮮関連サイバー活動全般を指す傘称。2009年頃から活動が確認されており、諜報・破壊工作・金銭窃取を横断的に行う点が特徴とされる。Mandiantの2024年3月時点の評価では、この傘称の中核はTEMP.Hermitと呼ばれるクラスターであり、金融特化のAPT38、諜報からランサムウェアまで手掛けるAndariel(2024年にAPT45として格上げ)は、いずれもLab 110傘下の別個の下位グループとして並列に位置づけられる(APT38がAPT45の下位という関係ではない)。ただしこの組織図モデルは継続的に更新されており、上記はその時点での対応関係である。Sony Pictures Entertainment攻撃(2014年)、Bangladesh Bank SWIFT不正送金事件(2016年、未遂含め約10億ドル・実損約8100万ドル)、WannaCryランサムウェア(2017年、150カ国・20万台以上に被害)などで知られる。近年は暗号資産取引所やDeFiプラットフォームへの攻撃、AppleJeus等のトロイの木馬化した仮想通貨アプリを用いた資金窃取に注力しているとされ、米財務省・司法省による制裁・起訴の対象ともなっている。",
+      "summary": "Lazarus Groupは、北朝鮮の偵察総局(RGB)第3局傘下のLab 110(旧Bureau 121)を出自とするとされる、北朝鮮関連サイバー活動全般を指す傘称。2009年頃から活動が確認されており、諜報・破壊工作・金銭窃取を横断的に行う点が特徴とされる。Mandiantの2022年3月時点の評価では、この傘称の中核はTEMP.Hermitと呼ばれるクラスターであり、金融特化のAPT38、諜報からランサムウェアまで手掛けるAndariel(2024年にAPT45として格上げ)は、いずれもLab 110傘下の別個の下位グループとして並列に位置づけられる(APT38がAPT45の下位という関係ではない)。ただしこの組織図モデルは継続的に更新されており、上記はその時点での対応関係である。Sony Pictures Entertainment攻撃(2014年)、Bangladesh Bank SWIFT不正送金事件(2016年、未遂含め約10億ドル・実損約8100万ドル)、WannaCryランサムウェア(2017年、150カ国・20万台以上に被害)などで知られる。近年は暗号資産取引所やDeFiプラットフォームへの攻撃、AppleJeus等のトロイの木馬化した仮想通貨アプリを用いた資金窃取に注力しているとされ、米財務省・司法省による制裁・起訴の対象ともなっている。",
       "purposes": [
         "espionage",
         "financial",
@@ -1072,8 +1089,12 @@ window.APT_ANNEX = {
           "name": "Black Banshee"
         },
         {
-          "vendor": "Trellix",
-          "name": "Earth Kumiho / PatheticSlug"
+          "vendor": "Trend Micro",
+          "name": "Earth Kumiho"
+        },
+        {
+          "vendor": "Cloudflare",
+          "name": "PatheticSlug"
         }
       ],
       "mitre": "G0094",
@@ -1271,7 +1292,7 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "その他別称",
-          "name": "T-APT-04, Rattlesnake, Baby Elephant, Hardcore Nationalist, APT-Q-39, SHROUDED#OOZE"
+          "name": "T-APT-04, Rattlesnake, Baby Elephant, Hardcore Nationalist, APT-Q-39, Leafperforator(Broadcom)"
         }
       ],
       "mitre": "G0121",
@@ -1444,7 +1465,7 @@ window.APT_ANNEX = {
       "nameJa": "FIN7(フィンセブン)",
       "country": "犯罪組織(国家帰属なし)",
       "countryCode": "CR",
-      "attribution": "国家帰属なし。ロシア・ウクライナ・ウズベキスタンを拠点とする金銭目的の犯罪組織とされる",
+      "attribution": "国家帰属なし。主にロシア・ウクライナの人物で構成される金銭目的の犯罪組織とされる(フロント企業Combi Securityがロシア・ウクライナ・ウズベキスタン等で要員を募集していたとされる)",
       "vendorNames": [
         {
           "vendor": "CrowdStrike",
@@ -1456,7 +1477,7 @@ window.APT_ANNEX = {
         },
         {
           "vendor": "Microsoft",
-          "name": "Sangria Tempest"
+          "name": "Sangria Tempest(旧称 ELBRUS)"
         },
         {
           "vendor": "IBM X-Force",
@@ -1465,16 +1486,12 @@ window.APT_ANNEX = {
         {
           "vendor": "SecureWorks",
           "name": "GOLD NIAGARA"
-        },
-        {
-          "vendor": "PwC",
-          "name": "ELBRUS"
         }
       ],
       "mitre": "G0046",
       "firstSeen": "2013年(2015年からFireEye/Mandiantが「FIN7」として追跡)",
       "hook": "郵送BadUSBを操る金融犯罪集団",
-      "summary": "FIN7は2013年頃から活動する金銭目的の犯罪グループで、ロシア・ウクライナ・ウズベキスタンを拠点とし国家帰属はないとされる。Carbanak Groupとも呼ばれ、当初はPOSマルウェア(CARBANAK、GRIFFON等)でレストランやホスピタリティ業界からクレジットカード情報を大量窃取した。2018年に主要メンバー3名がウクライナ等で逮捕・起訴され服役したが、組織は活動を継続。2020年以降はビッグゲームハンティングへ転換し、テディベアやギフト箱を装ってBadUSBデバイスを標的企業へ郵送しランサムウェアへつなげる手口(FBIが警告)や、自前のRaaS「DarkSide」「BlackMatter」の運用への関与が指摘されている。近年はPOWERPLANTバックドアやソフトウェアサプライチェーン侵害、マルバタイジングなど初期侵入手法を多様化させ、対象業界も金融・医療・クラウド・防衛など広範囲に拡大していると評価されている。",
+      "summary": "FIN7は2013年頃から活動する金銭目的の犯罪グループで、主にロシア・ウクライナの人物で構成され国家帰属はないとされる。Carbanak Groupとも呼ばれ、当初はPOSマルウェア(CARBANAK、GRIFFON等)でレストランやホスピタリティ業界からクレジットカード情報を大量窃取した。2018年に主要メンバー3名がウクライナ等で逮捕・起訴され服役したが、組織は活動を継続。2020年以降はビッグゲームハンティングへ転換し、テディベアやギフト箱を装ってBadUSBデバイスを標的企業へ郵送しランサムウェアへつなげる手口(FBIが警告)や、自前のRaaS「DarkSide」「BlackMatter」の運用への関与が指摘されている。近年はPOWERPLANTバックドアやソフトウェアサプライチェーン侵害、マルバタイジングなど初期侵入手法を多様化させ、対象業界も金融・医療・クラウド・防衛など広範囲に拡大していると評価されている。",
       "purposes": [
         "financial",
         "prepositioning"
@@ -1505,7 +1522,7 @@ window.APT_ANNEX = {
         "JSS Loader",
         "STONEBOAT",
         "DAVESHELL",
-        "BEACON/BEACONBELLHOP",
+        "BEAKDROP",
         "CROWVIEW",
         "DarkSide(ランサムウェア、関与が指摘される)",
         "BlackMatter(ランサムウェア、関与が指摘される)"
@@ -1616,14 +1633,14 @@ window.APT_ANNEX = {
           "desc": "LinkedIn等で得た従業員情報を使いヘルプデスクへ電話しOktaアクセスを奪取、ALPHV/BlackCatランサムウェアを展開しMGMのESXi基盤等を暗号化"
         },
         {
-          "year": "2024-2025",
+          "year": "2024-2026",
           "title": "主要メンバーの逮捕・訴追",
           "desc": "英国の17歳少年やRemington Ogletree(19歳)らが逮捕され、2026年にはエストニア系米国人の容疑者がフィンランドで拘束・米国へ引き渡された"
         },
         {
           "year": "2025",
           "title": "英国小売業へのDragonForceランサムウェア攻撃",
-          "desc": "Scattered Spiderの手口に一致する攻撃で英国大手小売企業が侵害され、DragonForceランサムウェアが展開されたとMandiantが評価"
+          "desc": "英国大手小売企業(M&S、Co-op等)がScattered Spiderの手口に一致する攻撃で侵害されDragonForceランサムウェアが展開されたが、Mandiant/Googleは可視性不足を理由に正式な帰属は控えているとされる"
         }
       ],
       "relatedApt": [],
